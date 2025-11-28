@@ -2,16 +2,15 @@ package com.example.webhoctap.model;
 
 public class ChiTietBaiLam {
     private int id;
-    private char DapAnChon;
+    private int DapAnChon;
     private boolean KiemTraDS;
 
     public ChiTietBaiLam()
     {}
-    public ChiTietBaiLam(int id, char dapanchon, boolean kiemtrads)
+    public ChiTietBaiLam(int id, int dapanchon)
     {
         this.id = id;
         this.DapAnChon = dapanchon;
-        this.KiemTraDS = kiemtrads;
     }
 
     public int getID()
@@ -23,11 +22,11 @@ public class ChiTietBaiLam {
         this.id = id;
     }
 
-    public char getDapAnChon()
+    public int getDapAnChon()
     {
         return this.DapAnChon;
     }
-    public void setDapAnChon(char dapanchon)
+    public void setDapAnChon(int dapanchon)
     {
         this.DapAnChon = dapanchon;
     }

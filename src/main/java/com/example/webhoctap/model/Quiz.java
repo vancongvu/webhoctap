@@ -7,11 +7,11 @@ public class Quiz {
     private String DapAnB;
     private String DapAnC;
     private String DapAnD;
-    private char DapAnDung;
+    private int DapAnDung;
 
     public Quiz()
     {}
-    public Quiz(int id, String cauhoi, String dapana, String dapanb, String dapanc, String dapand, char dapandung)
+    public Quiz(int id, String cauhoi, String dapana, String dapanb, String dapanc, String dapand, int dapandung)
     {
         this.id = id;
         this.CauHoi = cauhoi;
@@ -76,11 +76,11 @@ public class Quiz {
         this.DapAnD = dapand;
     }
 
-    public char getDapAnDung()
+    public int getDapAnDung()
     {
         return this.DapAnDung;
     }
-    public void setDapAnDung(char dapandung)
+    public void setDapAnDung(int dapandung)
     {
         this.DapAnDung = dapandung;
     }
