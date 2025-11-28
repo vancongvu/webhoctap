@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Tập - Web Học Tập</title>
+    <script src="https://kit.fontawesome.com/edc699b38d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/style.css"> 
+    <style>
+        /*Trang Chủ Đề */
+        .trang-chu-de
+        {
+            flex-direction: column;
+            gap: 40px;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .trang-chu-de h1
+        {
+            color: #4F46E5;
+            font-weight: bold;
+            margin:0;
+        }
+
+        .trang-chu-de section
+        {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .trang-chu-de article
+        {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            border: 1px solid black;
+            border-radius: 10px;
+            border-color: #f3f4f6;
+            box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            padding: 10px;
+            width: 400px;
+            
+        }
+        .trang-chu-de article h2
+        {
+            color: #4F46E5;
+        }
+        .trang-chu-de article p
+        {
+            color:black;
+        }
+        .trang-chu-de article:hover 
+        {
+            transform: translateY(-8px);
+            transition: 0.3s;
+        }
+        /*trang quiz flashcard*/
+        .trang-quiz-flashcard
+        {
+            flex-direction: column;
+            gap: 30px;
+        }
+        .header-quiz-flashcard
+        {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .quay-lai-chu-de
+        {
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+        /*phần trang flashcard*/
+        .trang-flashcard
+        {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            border: 1px solid #f3f4f6;
+            border-radius: 10px;
+            box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        .trang-flashcard .button
+        {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+        .button .cau-truoc, .button .cau-sau
+        {
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            background-color: #4F46E5;
+            width: 100px;
+            height: 40px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+        }
+        /*thanh chọn*/
+        .header-quiz-flashcard .thanh-chon
+        {
+            display: flex;
+            justify-content: center;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 10px 10px 10px 10px;
+            border-color: white;
+            background-color: white;
+        }
+        .header-quiz-flashcard .button-flashcard,
+        .header-quiz-flashcard .button-quiz
+        {
+            width: 350px;
+            height: 40px;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .button-flashcard
+        {
+            background-color: white;
+            color: black;
+            border-radius: 10px;
+        }
+        .button-quiz
+        {
+            background-color: white;
+            color: black;
+            border-radius: 10px;
+        }
+        .trang-chu-de article a
+        {
+            text-decoration: none;
+        }
+
+        /*đổi màu thanh chọn khi chọn button*/
+        #flashcard:target ~ .trang-quiz-flashcard .button-flashcard,
+        .trang-quiz-flashcard:not(:has(:target)) .button-flashcard
+        {
+            background-color: #4F46E5;
+            color: white;
+            font-weight: bold;
+        }
+        #quiz:target ~ .trang-quiz-flashcard .button-quiz
+        {
+            background-color: #4F46E5;
+            color: white;
+            font-weight: bold;
+        }
+        #quiz:target ~ .trang-quiz-flashcard .button-flashcard,
+        #flashcard:target ~ .trang-quiz-flashcard .button-quiz 
+        {
+        background-color: white;
+        color: black;
+        font-weight: normal;
+        }
+
+        /*phần chứa nội dung*/
+        .trang-chu-de, .trang-quiz-flashcard, .trang-flashcard, .trang-quiz
+        {
+            display: none;  /* ẩn hết*/
+        }
+
+        /* đặt trang chủ đề làm mặc định hoặc khi có yêu cầu */
+        #chon-chu-de:target ~ .trang-chu-de,
+        main:not(:has(:target)) .trang-chu-de
+        {
+            display: flex; 
+        }
+
+
+        /* hiển thị flashcard-quiz sau khi chọn chủ đề */
+        #flashcard-quiz:target ~ .trang-quiz-flashcard
+        {
+            display: flex; 
+        }
+        /* khi vào phần quiz, ẩn phần flashcard */
+        #quiz:target ~ .trang-quiz-flashcard .trang-flashcard
+        {
+            display: none;
+        }
+        /* khi vào phần flashcard, ẩn phần quiz */
+        #flashcard:target ~ .trang-quiz-flashcard .trang-quiz
+        {
+            display: none;
+        }
+
+        /* đặt phần flashcard làm hiển thị mặc định trang flashcard-quiz HOẶC khi có yêu cầu */
+        #flashcard:target ~ .trang-quiz-flashcard .trang-flashcard,
+        #flashcard:target ~ .trang-quiz-flashcard,
+        .trang-quiz-flashcard:not(:has(:target)) .trang-flashcard
+        {
+            display: flex;
+        }
+        /* vào phần quiz khi có yêu cầu */
+        #quiz:target ~ .trang-quiz-flashcard .trang-quiz,
+        #quiz:target ~ .trang-quiz-flashcard
+        {
+            display: flex;
+        }
+        /* 2 MẶT FLASHCARD*/
+        .flashcard
+        {
+            position: relative;
+            align-self: center;
+            width: 400px;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+        .flashcard .mat-truoc,
+        .flashcard .mat-sau {
+            position: absolute;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 400px;           
+            height: 200px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            color: white;
+            transition: transform 0.6s;
+        }
+        /* ban đầu */
+        .flashcard .mat-truoc {
+            border: 1px solid #4F46E5;
+            background-color: #4F46E5;
+            transform: rotateY(0deg);
+        }
+
+        .flashcard .mat-sau {
+            border: 1px solid #14B8A6;
+            background-color: #14B8A6;
+            transform: rotateY(180deg);
+        }
+        /* khi xoay */
+        .flashcard.latthe .mat-truoc
+        {
+            transform: rotateY(180deg);
+        }
+        .flashcard.latthe .mat-sau
+        {
+            transform: rotateY(0deg);
+        }
+
+        /*quiz*/
+        /*giới thiệu*/
+        .trang-quiz .gioi-thieu-quiz
+        {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid white;
+            background-color: white;
+            border-radius: 10px;
+            width: 700px;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0px 4px 5px 1px rgba(0, 0, 0, 0.1);
+            gap: 40px;
+        }
+        .trang-quiz .gioi-thieu-quiz .button-bd
+        {
+            border:none;
+            background-color: #4F46E5;
+            border: 1px solid #4F46E5;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            width: 100px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        /*nội dung câu hỏi */
+        .trang-quiz .noi-dung-cau-hoi
+        {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            width: 700px;
+            border: 1px solid white;
+            border-radius: 10px;
+            background-color: white;
+            gap: 40px;
+        }
+        .trang-quiz .noi-dung-cau-hoi .tieu-de-quiz
+        {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 10px;
+        }
+        .diem
+        {
+            color:#4F46E5;
+            font-weight: bold;
+        }
+        .cau-tra-loi
+        {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            margin: 20px;
+            gap: 12px;
+        }
+        .cau-hoi h2
+        {
+            margin: 20px;
+        }
+        .cau-tra-loi button
+        {
+            background-color: white;
+            border-radius: 10px;
+            height: 50px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+        .cau-tra-loi button:hover
+        {
+            background-color: #c6bebe;
+            transform: translateY(-3px);
+            transition: 0.3s;
+        }
+        .cau-tiep-theo
+        {
+            border: none;
+            background-color: white;
+            color: #4F46E5;
+            font-weight: bold;
+            font-size: 20px;
+            align-self: end;
+            margin: 20px;
+            cursor: pointer;
+        }
+        .hoan-thanh
+        {
+            border: none;
+            background-color: white;
+            color: #4F46E5;
+            font-weight: bold;
+            font-size: 20px;
+            align-self: end;
+            margin: 20px;
+            cursor: pointer;
+        }
+        .thong-ke
+        {
+            flex-direction: column;
+            text-align: center;
+            border: 1px solid white;
+            border-radius: 10px;
+            width: 700px;
+            background-color: white;
+            box-shadow: 0px 4px 5px 1px rgba(0, 0, 0, 0.1);
+            gap: 40px;
+        }
+        .thong-ke .cau-dat
+        {
+            font-size: 30px;
+            font-weight: bold;
+            color: #4F46E5;
+        }
+        .thong-ke button
+        {
+            border: 1px solid #4F46E5;
+            border-radius: 10px;
+            background-color: #4F46E5;
+            width: 150px;
+            height: 50px;
+            color: white;
+            font-size: 18px;
+            font-weight: bolder;
+
+            align-self: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="TrangChu.html">
+            <i class="fa-solid fa-brain" style="font-size: 3rem;"></i>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="TrangChu.html">Trang Chủ</a></li>
+                <li class="active"><a href="HocTap.html">Học Tập</a></li>
+                <li><a href="BangDiem.html">Bảng Điểm</a></li>
+                <li><a href="GioiThieu.html">Giới Thiệu</a></li>
+            </ul>
+        </nav>
+        <div>
+            <a href="#" class="dangnhap">Đăng Nhập</a>
+            <a href="#" class="dangky">Đăng Ký</a>
+        </div>
+    </header>
+    <main>
+        <!-- TRANG ĐỊNH DANH -->
+        <div id="chon-chu-de"></div>
+        <div id="flashcard-quiz"></div>
+        <div id="quiz"></div>
+        <div id="flashcard"></div>
+        <!-- trang chủ đề, LÀ TRANG MẶC ĐỊNH KHI TẢI TRANG -->
+
+        <section class="trang-chu-de">
+            <h1>Chọn Chủ Đề Học Tập</h1>
+            <section>
+                <!-- list chủ đề -->
+                <article>
+                    <a href="#flashcard-quiz">
+                        <img src="../img/calculator.png" width="40" height="40">
+                        <h2>Toán Học Cơ Bản</h2>
+                        <p>Các khái niệm và công thức toán học nền tảng.</p>
+                    </a>
+                </article>
+                <article>
+                    <a href="#flashcard-quiz">
+                        <img src="../img/flask-conical.png" width="40" height="40">
+                        <h2>Vật Lý Đại Cương</h2>
+                        <p>Tìm hiểu về các định luật cơ bản của thế giới tự nhiên.</p>
+                    </a>
+                </article>
+                <article>
+                    <a href="#flashcard-quiz">
+                        <img src="../img/atom.png" width="40" height="40">
+                        <h2>Hóa Học Vô Cơ</h2>
+                        <p>Những nguyên tố, hợp chất và phản ứng hóa học phổ biến.</p>
+                    </a>
+                </article>
+                <article>
+                    <a href="#flashcard-quiz">
+                        <img src="../img/languages.png" width="40" height="40">
+                        <h2>Tiếng Anh Cơ Bản</h2>
+                        <p>Những nguyên tố, hợp chất và phản ứng hóa học phổ biến.</p>
+                    </a>
+                </article>
+                <article>
+                    <a href="#flashcard-quiz">
+                        <img src="../img/landmark.png" width="40" height="40">
+                        <h2>Lịch Sử Việt Nam</h2>
+                        <p>Những nguyên tố, hợp chất và phản ứng hóa học phổ biến.</p>
+                    </a>
+                </article>
+                <article>
+                    <a href="#flashcard-quiz">
+                        <img src="../img/earth.png" width="40" height="40">
+                        <h2>Địa Lý Việt Nam</h2>
+                        <p>Những nguyên tố, hợp chất và phản ứng hóa học phổ biến.</p>
+                    </a>
+                </article>
+            </section>
+        </section>
+
+        <!-- TRANG HỌC TẬP FLASHCARD VÀ QUIZ -->
+        <section class="trang-quiz-flashcard">
+            <section class="header-quiz-flashcard">
+                <a class="quay-lai-chu-de" href="#chon-chu-de">⬅ Quay lại chọn chủ đề</a>
+                <div class="thanh-chon">
+                    <a href="#flashcard"><button class="button-flashcard">Flashcard</button></a>
+                    <a href="#quiz"><button class="button-quiz">Quiz</button></a>
+                </div>
+            </section>
+            <!-- TRANG FLASHCARD -->
+            <section class="trang-flashcard">
+                <h1 class="ten-chu-de">Lịch Sử Việt Nam</h1>
+                <p class="so-cau-hoi">Thẻ n/n</p>
+                <article class="flashcard">   
+                    <div class="mat-truoc">
+                        <p>Câu hỏi</p>
+                    </div>
+                    <div class="mat-sau">
+                        <p>Đáp án</p>
+                    </div>
+                </article>
+                <section class="button">
+                    <button class="cau-truoc">Trước</button>
+                    <button class="cau-sau">Sau</button>
+                </section>
+            </section>
+
+            <!-- TRANG QUIZ -->
+            <section class="trang-quiz">
+                <article class="gioi-thieu-quiz">
+                    <h2>tiêu đề</h2>
+                    <p>số câu hỏi</p>
+                    <button class="button-bd">Bắt Đầu</button>
+                </article>
+                <article class="noi-dung-cau-hoi">
+                    <div class="tieu-de-quiz">
+                        <p class="socauhoi">Câu ?/?</p>
+                        <p class="diem">Điểm: 0</p>
+                    </div>
+                    <div class="cau-hoi">
+                        <h2>Thì hiện tại đơn dùng để diễn tả điều gì?</h2>
+                    </div>
+                    <div class="cau-tra-loi">
+                        <button>Đáp án 1</button>
+                        <button>Đáp án 2</button>
+                        <button>Đáp án 3</button>
+                        <button>Đáp án 4</button>
+                    </div>
+                    <button class="cau-tiep-theo">Tiếp →</button>
+                    <button class="hoan-thanh">Hoàn thành</button>
+                </article>
+                <article class="thong-ke">
+                    <h1>Hoàn Thành!</h1>
+                    <p class="cau-dat">n/n</p>
+                    <a href="#chon-chu-de"><button class="tro-ve-cd">Trở về Chủ đề</button></a>
+                </article>
+            </section>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Web Học Tập.</p>
+    </footer>
+
+
+    <script>
+        /* XỬ LÝ lật thẻ FLASHCARD */
+        const flashcards = document.querySelectorAll('.flashcard');
+
+        for (let i = 0;i < flashcards.length; i++)
+        {
+            flashcards[i].addEventListener('click',latThe);
+        }
+        function latThe()
+        {
+            this.classList.toggle('latthe');
+        }
+        /* DỮ LIỆU FLASHCARD */
+        const dulieu = [
+                            {
+                                "ten_mon_hoc": "toan",
+                                "quiz": [
+                                            { "id": 1, "question": "5 + 7 bằng bao nhiêu?", 
+                                                       "answer": "12" },
+                                            { "id": 2, "question": "Chu vi hình chữ nhật tính bằng công thức nào?", 
+                                                       "answer": "C = 2 × (dài + rộng)" },
+                                            { "id": 3, "question": "Số nguyên âm là gì?", 
+                                                       "answer": "Là các số nhỏ hơn 0 (ví dụ: -1, -2)" }
+                                        ]
+                            },
+
+                            {
+                                "ten_mon_hoc": "ly",
+                                "quiz": [
+                                            { "id": 1, "question": "Mặt Trời mọc ở hướng nào?", 
+                                                       "answer": "Hướng Đông" },
+                                            { "id": 2, "question": "Cái cân dùng để làm gì?", 
+                                                       "answer": "Đo khối lượng" },
+                                            { "id": 3, "question": "Vật rơi xuống đất do lực nào?", 
+                                                       "answer": "Lực hấp dẫn" }
+                                        ]
+                            },
+
+                            {
+                                "ten_mon_hoc": "hoa",
+                                "quiz": [
+                                            { "id": 1, "question": "Nước có màu gì?", "answer": "Không màu" },
+                                            { "id": 2, "question": "Muối ăn có công thức hóa học là gì?", "answer": "NaCl" },
+                                            { "id": 3, "question": "Con người hít vào khí gì để thở?", "answer": "Ôxy (O₂)" }
+                                        ]
+                            },
+
+                            {
+                                "ten_mon_hoc": "anh",
+                                "quiz": [
+                                            { "id": 1, "question": "Từ 'apple' nghĩa là gì?", "answer": "Quả táo" },
+                                            { "id": 2, "question": "Từ 'hello' nghĩa là gì?", "answer": "Xin chào" },
+                                            { "id": 3, "question": "Từ 'thank you' nghĩa là gì?", "answer": "Cảm ơn" }
+                                        ]
+                            },
+
+                            {
+                                "ten_mon_hoc": "su",
+                                "quiz": [
+                                            { "id": 1, "question": "Cách mạng Tháng Tám diễn ra năm nào?", "answer": "1945" },
+                                            { "id": 2, "question": "Ai là Chủ tịch nước đầu tiên của Việt Nam?", "answer": "Hồ Chí Minh" },
+                                            { "id": 3, "question": "Chiến thắng Điện Biên Phủ diễn ra năm nào?", "answer": "1954" }
+                                        ]
+                            },
+
+                            {
+                                "ten_mon_hoc": "dia",
+                                "quiz": [
+                                            { "id": 1, "question": "Thủ đô của Việt Nam là gì?", "answer": "Hà Nội" },
+                                            { "id": 2, "question": "Việt Nam thuộc châu lục nào?", "answer": "Châu Á" },
+                                            { "id": 3, "question": "Dãy núi cao nhất Việt Nam là gì?", "answer": "Hoàng Liên Sơn (đỉnh Fansipan)" }
+                                        ]
+                            }
+                        ]
+
+        // dữ liệu quiz
+        const dulieu_quiz = [
+                                {
+                                    "ten_mon_hoc": "toan",
+                                    "quiz": [
+                                                { "id": 1, "question": "5 + 7 bằng bao nhiêu?", 
+                                                           "options": ["11","12","13","10"], 
+                                                           "answer": 1 },
+                                                { "id": 2, "question": "Chu vi hình chữ nhật tính bằng công thức nào?", 
+                                                           "options": ["C = (dài + rộng) ÷ 2","C = dài × rộng","C = 2 × (dài + rộng)","C = dài + rộng"], 
+                                                           "answer": 2 },
+                                                { "id": 3, "question": "Số nguyên âm là gì?", 
+                                                           "options": ["Là số chia hết cho 2","Là số nhỏ hơn 0","Là số lớn hơn 0","Là số tự nhiên"], 
+                                                           "answer": 1 }
+                                            ]
+                                },
+
+                                {
+                                    "ten_mon_hoc": "ly",
+                                    "quiz": [
+                                                { "id": 1, "question": "Mặt Trời mọc ở hướng nào?", 
+                                                           "options": ["Hướng Bắc","Hướng Đông","Hướng Tây","Hướng Nam"], 
+                                                           "answer": 1 },
+                                                { "id": 2, "question": "Cái cân dùng để làm gì?", 
+                                                           "options": ["Đo độ dài","Đo thể tích","Đo lực","Đo khối lượng"], 
+                                                           "answer": 3 },
+                                                { "id": 3, "question": "Vật rơi xuống đất do lực nào?", 
+                                                           "options": ["Lực đàn hồi","Lực ma sát","Lực hấp dẫn","Lực đẩy Archimedes"], 
+                                                           "answer": 2 }
+                                            ]
+                                },
+
+                                {
+                                    "ten_mon_hoc": "hoa",
+                                    "quiz": [
+                                                { "id": 1, "question": "Nước có màu gì?", "options": ["Màu xanh nhạt","Không màu","Màu vàng nhạt","Màu trắng đục"], "answer": 1 },
+                                                { "id": 2, "question": "Muối ăn có công thức hóa học là gì?", "options": ["HCl","NaOH","NaCl","KCl"], "answer": 2 },
+                                                { "id": 3, "question": "Con người hít vào khí gì để thở?", "options": ["Nitơ (N₂)","Hydro (H₂)","Carbon dioxide (CO₂)","Oxy (O₂)"], "answer": 3 }
+                                            ]
+                                },
+
+                                {
+                                    "ten_mon_hoc": "anh",
+                                    "quiz": [
+                                                { "id": 1, "question": "Từ 'apple' nghĩa là gì?", "options": ["Quả chuối","Quả nho","Quả táo","Quả cam"], "answer": 2 },
+                                                { "id": 2, "question": "Từ 'hello' nghĩa là gì?", "options": ["Xin lỗi","Cảm ơn","Tạm biệt","Xin chào"], "answer": 3 },
+                                                { "id": 3, "question": "Từ 'thank you' nghĩa là gì?", "options": ["Xin lỗi","Cảm ơn","Xin chào","Tạm biệt"], "answer": 1 }
+                                            ]
+                                },
+
+                                {
+                                    "ten_mon_hoc": "su",
+                                    "quiz": [
+                                                { "id": 1, "question": "Cách mạng Tháng Tám diễn ra năm nào?", "options": ["1975","1930","1945","1954"], "answer": 2 },
+                                                { "id": 2, "question": "Ai là Chủ tịch nước đầu tiên của Việt Nam?", "options": ["Phạm Văn Đồng","Hồ Chí Minh","Trường Chinh","Võ Nguyên Giáp"], "answer": 1 },
+                                                { "id": 3, "question": "Chiến thắng Điện Biên Phủ diễn ra năm nào?", "options": ["1954","1975","1946","1968"], "answer": 0 }
+                                            ]
+                                },
+
+                                {
+                                    "ten_mon_hoc": "dia",
+                                    "quiz": [
+                                                { "id": 1, "question": "Thủ đô của Việt Nam là gì?", "options": ["TP.HCM","Hải Phòng","Hà Nội","Đà Nẵng"], "answer": 2 },
+                                                { "id": 2, "question": "Việt Nam thuộc châu lục nào?", "options": ["Châu Phi","Châu Mỹ","Châu Á","Châu Âu"], "answer": 2 },
+                                                { "id": 3, "question": "Dãy núi cao nhất Việt Nam là gì?", "options": ["Ba Vì","Hoàng Liên Sơn (Fansipan)","Bạch Mã","Trường Sơn"], "answer": 1 }
+                                            ]
+                                }
+                            ]
+
+        //LẤY TẤT CẢ CÁC MÔN HỌC
+        const monhoc = document.querySelectorAll('.trang-chu-de section article');
+
+        //LẤY FLASHCARD
+        const flashcard = document.querySelector('.flashcard');
+
+        //LẤY NỘI DUNG FLASHCARD 
+        const mattruoc = flashcard.querySelector('.mat-truoc p');
+        const matsau = flashcard.querySelector('.mat-sau p');
+        
+        //LẤY TIÊU ĐỀ MÔN HỌC VÀ SỐ CÂU HỎI
+        const tenchude = document.querySelector('.ten-chu-de');
+        const socauhoi = document.querySelector('.so-cau-hoi');
+
+        //NÚT ĐIỀU HƯỚNG
+        const nuttruoc = document.querySelector('.cau-truoc');
+        const nutsau = document.querySelector('.cau-sau');
+
+        const chudequiz = document.querySelector('.gioi-thieu-quiz h2');
+        const socauhoi2 = document.querySelector('.gioi-thieu-quiz p');
+        const socauhoi3 = document.querySelector('.socauhoi');
+        const diem = document.querySelector('.diem');
+        const cauhoi = document.querySelector('.cau-hoi h2');
+        const traloi = document.querySelectorAll('.cau-tra-loi button');
+        const buttonTT = document.querySelector('.cau-tiep-theo');
+        const buttonHT = document.querySelector('.hoan-thanh');
+        const diemTongKet = document.querySelector('.cau-dat');
+        const trove = document.querySelector('.tro-ve-cd');
+        const quaylai = document.querySelector('.quay-lai-chu-de');
+
+        let sothutuF; // thứ tự câu hỏi
+        let sothutuQ;
+        let danhSachTenMon;
+        let duLieuMonF; //lấy dữ liệu câu hỏi theo môn học
+        let monHocNguoiDungChon;
+        let quizFlash;
+        let quizQuiz;
+        let duLieuMonQ;
+        let updateDiem;
+        let dachon;
+
+        let luuDiem;
+
+        for(let i=0; i < monhoc.length; i++)
+        {
+            monhoc[i].dataset.index = i;
+            monhoc[i].addEventListener('click', laydulieu);
+        }
+        function laydulieu()
+        {
+            const vitriMonChon = this.dataset.index;
+
+            //Môn học do người dùng chọn
+            monHocNguoiDungChon = dulieu[vitriMonChon].ten_mon_hoc;
+
+            //tìm dữ liệu môn học theo yêu cầu người dùng
+            duLieuMonF = dulieu.find((mon) => mon.ten_mon_hoc === monHocNguoiDungChon);
+            duLieuMonQ = dulieu_quiz.find((mon) => mon.ten_mon_hoc === monHocNguoiDungChon);
+
+            //tìm bộ câu hỏi và đáp án của flashcard và quiz theo môn học
+            quizFlash = duLieuMonF.quiz;
+            quizQuiz = duLieuMonQ.quiz;
+
+            sothutuF = 0;
+            sothutuQ = 0;
+            updateDiem = 0;
+
+            diem.textContent = "Điểm: " + updateDiem;
+            localStorage.setItem('diemluu', updateDiem);
+            buttonTT.style.display = "flex";
+            buttonHT.style.display = "none";
+            diemTongKet.textContent = updateDiem + "/" + quizQuiz.length;
+
+            //cập nhật tên chủ đề môn học
+            tenchude.textContent = this.querySelector('h2').textContent;
+            chudequiz.textContent = this.querySelector('h2').textContent;
+
+            hienthiFlashcard();
+            hienthiQuiz();
+        }
+        function hienthiFlashcard()
+        {
+            //reset về mặt trước mỗi lần đổi câu
+            flashcard.classList.remove('latthe');
+            //hiển thị câu hỏi
+            mattruoc.textContent = quizFlash[sothutuF].question;
+            matsau.textContent = quizFlash[sothutuF].answer;
+            //tổng số câu hỏi
+            let tongcauhoi = quizFlash.length;
+            socauhoi.textContent = "Thẻ " + (sothutuF+1) + "/" + tongcauhoi;
+            trangThaiButton(); 
+        }
+
+        //XỬ LÝ BUTTON TRƯỚC SAU
+        nuttruoc.addEventListener('click', cautruoc);
+        function cautruoc()
+        {
+            if(sothutuF > 0)
+            {
+                sothutuF--;
+                hienthiFlashcard();
+            }
+        }
+        
+        nutsau.addEventListener('click', causau);
+        function causau()
+        {
+            if(sothutuF < (quizFlash.length - 1))
+            {
+                sothutuF++;
+                hienthiFlashcard();
+            }
+        }
+        function trangThaiButton()
+        {
+            nuttruoc.style.opacity = "1";
+            nuttruoc.style.pointerEvents = "auto";
+
+            nutsau.style.opacity = "1";
+            nutsau.style.pointerEvents = "auto";
+            // Nếu đang ở đầu
+            if (sothutuF === 0) 
+            {
+                nuttruoc.style.opacity = "0.5";
+                nuttruoc.style.pointerEvents = "none";
+            } 
+            // Nếu đang ở cuối
+            else if (sothutuF === (quizFlash.length - 1)) 
+            {
+                nutsau.style.opacity = "0.5";
+                nutsau.style.pointerEvents = "none";
+            } 
+        }
+
+        // xử lý phần trang quiz
+        const buttonbd = document.querySelector('.button-bd');
+        const trangGT = document.querySelector('.gioi-thieu-quiz');
+        const trangND = document.querySelector('.noi-dung-cau-hoi');
+        const trangTK = document.querySelector('.thong-ke');
+
+            //mặc định trang giới thiệu hiện
+            trangGT.style.display="flex";
+            trangND.style.display="none";
+            trangTK.style.display="none";
+        buttonbd.addEventListener('click', hienTrangND);
+        function hienTrangND()
+        {
+            trangGT.style.display="none";
+            trangND.style.display="flex";
+        }
+
+        //quiz
+        function hienthiQuiz()
+        {
+            dachon = false;
+
+            //hiển thị tiêu đề
+            socauhoi2.textContent = "Số câu hỏi: " + quizQuiz.length;
+            socauhoi3.textContent = "Câu " + (sothutuQ + 1) + "/" + quizQuiz.length;
+            //hiển thị câu hỏi
+            cauhoi.textContent = quizQuiz[sothutuQ].question;
+            //hiện thị 4 đáp án
+            for(let j = 0; j < traloi.length; j++)
+            {
+                traloi[j].textContent = quizQuiz[sothutuQ].options[j];
+
+                traloi[j].style.background = "";
+                traloi[j].style.pointerEvents = "auto";
+                traloi[j].dataset.index = j;
+                //Chọn đáp án
+                traloi[j].addEventListener('click', kiemtra);
+                
+            }
+        }
+        function kiemtra()
+        {
+            if(dachon === true) //không cho chọn lại
+                return;
+
+            dachon = true;
+            
+            let vitriChon = parseInt(this.dataset.index);
+            let vitriDung = quizQuiz[sothutuQ].answer;
+
+            if(vitriChon === vitriDung)
+            {
+                this.style.background = "lightgreen";
+                updateDiem++;
+                diem.textContent = "Điểm: " + updateDiem;
+                //lưu điểm vào localStorage
+                localStorage.setItem('diemluu', updateDiem); 
+            }
+            else
+            {
+                this.style.background = "pink";
+                traloi[vitriDung].style.background = "lightgreen";
+            }
+            //ngừng nhận sự kiện
+            for(let i = 0; i < traloi.length; i++)
+            {
+                traloi[i].style.pointerEvents = "none";
+                traloi[i].style.cursor = "default";
+            }
+            
+        }
+        buttonTT.addEventListener('click', cautieptheo);
+        function cautieptheo()
+        {
+            if(sothutuQ < quizQuiz.length-1)
+            {
+                sothutuQ++;
+                hienthiQuiz();
+            }
+            if(sothutuQ === quizQuiz.length-1)// nếu là câu cuối cùng
+            {   
+                buttonHT.style.display = "flex";
+                buttonTT.style.display = "none";
+                buttonHT.addEventListener('click', thongkequiz);
+            } 
+        }
+        function thongkequiz()
+        {
+            trangND.style.display = "none";
+            trangTK.style.display = "flex";
+            diemTongKet.textContent = updateDiem + "/" + quizQuiz.length;
+            trove.addEventListener('click', trovechude);
+            let luuChuDe = localStorage.getItem('tenchudea');
+            localStorage.setItem('tenchudea', tenchude.textContent);
+            localStorage.setItem('tongsocau', quizQuiz.length);
+        } 
+        function trovechude()
+        {
+            trangTK.style.display = "none";
+            trangGT.style.display = "flex";
+        }
+        quaylai.addEventListener('click', anHetTrangQuiz);
+        function anHetTrangQuiz()
+        {
+            trangTK.style.display = "none";
+            trangGT.style.display = "flex";
+            trangND.style.display = "none";
+        }
+
+    </script>
+</body>
+</html>
