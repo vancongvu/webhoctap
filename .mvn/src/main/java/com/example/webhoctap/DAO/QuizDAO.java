@@ -1,0 +1,209 @@
+package com.example.webhoctap.DAO;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import com.example.webhoctap.Database.JDBCUtil;
+import com.example.webhoctap.model.Quiz;
+
+public class QuizDAO implements DAOInterface<Quiz> {
+
+    public static QuizDAO getInstance()
+    {
+        return new QuizDAO();
+    }
+    
+    public int insert (Quiz t)
+    {
+        int ketQua = 0;
+        try
+        {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "INSERT INTO CAUHOI (CAUHOI, DAP_AN_A, DAP_AN_B, DAP_AN_C, DAP_AN_D, DAP_AN_DUNG)" +
+                         "VALUES (?,?,?,?,?,?)";
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setString(1, t.getCauHoi());
+            pst.setString(2, t.getDapAnA());
+            pst.setString(3, t.getDapAnB());
+            pst.setString(4, t.getDapAnC());
+            pst.setString(5, t.getDapAnD());
+            pst.setInt(6, t.getDapAnDung());
+
+            System.out.println("Thực thi: " + sql);
+            ketQua = pst.executeUpdate();
+
+            JDBCUtil.closeConnection(c);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return ketQua;
+    }
+
+    public int update (Quiz t)
+    {
+        int ketQua = 0;
+        try
+        {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "UPDATE CAUHOI" +
+                         "SET CAUHOI = ? ,  DAP_AN_A = ? , DAP_AN_B = ? , DAP_AN_C = ? , DAP_AN_D = ?, DAP_AN_DUNG = ?" +
+                         "WHERE ID_CAUHOI = ?";
+
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setString(1, t.getCauHoi());
+            pst.setString(2, t.getDapAnA());
+            pst.setString(3, t.getDapAnB());
+            pst.setString(4, t.getDapAnC());
+            pst.setString(5, t.getDapAnD());
+            pst.setInt(6, t.getDapAnDung());
+            pst.setInt(7, t.getID());
+
+            System.out.println("Thực thi: " + sql);
+            ketQua = pst.executeUpdate();
+
+            JDBCUtil.closeConnection(c);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return ketQua;
+    }
+
+    public int delete (Quiz t)
+    {
+       int ketQua = 0;
+        try
+        {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "DELETE FROM CAUHOI WHERE ID_CAUHOI = ?";
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setInt(1, t.getID());
+
+            System.out.println("Thực thi: " + sql);
+            ketQua = pst.executeUpdate();
+
+            JDBCUtil.closeConnection(c);
+        } 
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return ketQua;
+    }
+
+    public ArrayList<Quiz> selectAll()
+    {
+        ArrayList<Quiz> ketQua = new ArrayList<Quiz>();
+        try
+        {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "SELECT * FROM CAUHOI";
+            PreparedStatement pst = c.prepareStatement(sql);
+
+            System.out.println("Thực thi: " + sql);
+            ResultSet rs = pst.executeQuery();
+                        
+            while(rs.next())
+            {
+                int id = rs.getInt("ID_CAUHOI");
+                String cauhoi = rs.getString("CAUHOI");
+                String dapana = rs.getString("DAP_AN_A");
+                String dapanb = rs.getString("DAP_AN_B");
+                String dapanc = rs.getString("DAP_AN_C");
+                String dapand = rs.getString("DAP_AN_D");
+                int dapandung = rs.getInt("DAP_AN_DUNG");
+
+                Quiz quiz = new Quiz(id, cauhoi, dapana, dapanb, dapanc, dapand, dapandung);
+                ketQua.add(quiz);
+            }
+
+            JDBCUtil.closeConnection(c);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return ketQua;
+    }
+
+    public Quiz selectById(Quiz t)
+    {
+        Quiz ketQua = null;
+        try
+        {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "SELECT * FROM CAUHOI WHERE ID_CAUHOI = ?";
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setInt(1, t.getID());
+
+            System.out.println("Thực thi: " + sql);
+            ResultSet rs = pst.executeQuery();
+
+            while(rs.next())
+            {
+                int id = rs.getInt("ID_CAUHOI");
+                String cauhoi = rs.getString("CAUHOI");
+                String dapana = rs.getString("DAP_AN_A");
+                String dapanb = rs.getString("DAP_AN_B");
+                String dapanc = rs.getString("DAP_AN_C");
+                String dapand = rs.getString("DAP_AN_D");
+                int dapandung = rs.getInt("DAP_AN_DUNG");
+
+                ketQua = new Quiz(id, cauhoi, dapana, dapanb, dapanc, dapand, dapandung);
+            }
+            JDBCUtil.closeConnection(c);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return ketQua;
+    }
+
+    public ArrayList<Quiz> selectByCondition(String condition)
+    {
+        ArrayList<Quiz> ketQua = new ArrayList<Quiz>();
+        try
+        {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "SELECT * FROM CAUHOI WHERE " + condition;
+            PreparedStatement pst = c.prepareStatement(sql);
+
+            ResultSet rs = pst.executeQuery();
+            System.out.println(sql);
+            
+            while(rs.next())
+            {
+                int id = rs.getInt("ID_CAUHOI");
+                String cauhoi = rs.getString("CAUHOI");
+                String dapana = rs.getString("DAP_AN_A");
+                String dapanb = rs.getString("DAP_AN_B");
+                String dapanc = rs.getString("DAP_AN_C");
+                String dapand = rs.getString("DAP_AN_D");
+                int dapandung = rs.getInt("DAP_AN_DUNG");
+
+                Quiz quiz = new Quiz(id, cauhoi, dapana, dapanb, dapanc, dapand, dapandung);
+                ketQua.add(quiz);
+            }
+
+            JDBCUtil.closeConnection(c);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return ketQua;
+    }
+}
