@@ -52,7 +52,7 @@ public class NguoiDungDAO implements DAOInterface<NguoiDung> {
 
             String sql = "UPDATE NGUOIDUNG" +
                          "SET HOTEN = ? , TENDANGNHAP = ? , MATKHAU = ?" +
-                         " WHERE ID = ?";
+                         " WHERE ID_NGUOIDUNG = ?";
 
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setString(1, t.getHoTen());
@@ -79,7 +79,7 @@ public class NguoiDungDAO implements DAOInterface<NguoiDung> {
         {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "DELETE FROM NGUOIDUNG WHERE ID = ?";
+            String sql = "DELETE FROM NGUOIDUNG WHERE ID_NGUOIDUNG = ?";
             
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setInt(1, t.getID());
@@ -111,7 +111,7 @@ public class NguoiDungDAO implements DAOInterface<NguoiDung> {
                         
             while(rs.next())
             {
-                int id = rs.getInt("ID");
+                int id = rs.getInt("ID_NGUOIDUNG");
                 String hoten = rs.getString("HOTEN");
                 String tendangnhap = rs.getString("TENDANGNHAP");
                 String matkhau = rs.getString("MATKHAU");
@@ -136,7 +136,7 @@ public class NguoiDungDAO implements DAOInterface<NguoiDung> {
         {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "SELECT * FROM NGUOIDUNG WHERE ID = ?";
+            String sql = "SELECT * FROM NGUOIDUNG WHERE ID_NGUOIDUNG = ?";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setInt(1, t.getID());
 
@@ -145,7 +145,7 @@ public class NguoiDungDAO implements DAOInterface<NguoiDung> {
 
             while(rs.next())
             {
-                int id = rs.getInt("ID");
+                int id = rs.getInt("ID_NGUOIDUNG");
                 String hoten = rs.getString("HOTEN");
                 String tendangnhap = rs.getString("TENDANGNHAP");
                 String matkhau = rs.getString("MATKHAU");
@@ -176,7 +176,7 @@ public class NguoiDungDAO implements DAOInterface<NguoiDung> {
             
             while(rs.next())
             {
-                int id = rs.getInt("ID");
+                int id = rs.getInt("ID_NGUOIDUNG");
                 String hoten = rs.getString("HOTEN");
                 String tendangnhap = rs.getString("TENDANGNHAP");
                 String matkhau = rs.getString("MATKHAU");

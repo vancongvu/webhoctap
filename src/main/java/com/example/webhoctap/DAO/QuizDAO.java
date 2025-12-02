@@ -206,4 +206,30 @@ public class QuizDAO implements DAOInterface<Quiz> {
         }
         return ketQua;
     }
+
+    //lấy đáp án đúng theo id câu hỏi
+    public Integer selectDapAnDung(int id)
+    {
+        Integer dapandung = null;
+        try
+        {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "SELECT DAP_AN_DUNG FROM CAUHOI WHERE ID_CAUHOI = ?";
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setInt(1, id);
+
+            System.out.println("Thực thi: " + sql);
+            ResultSet rs = pst.executeQuery();
+
+            dapandung = rs.getInt("DAP_AN_DUNG");
+
+            JDBCUtil.closeConnection(c);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return dapandung;
+    }
 }

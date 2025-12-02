@@ -20,10 +20,11 @@ public class HelloController {
                     ", TENDANGNHAP: " + rs.getString("TENDANGNHAP") +
                     ", MATKHAU: " + rs.getString("MATKHAU")
                 );
+            
             }
             
         } catch (Exception e) {
-            // TODO: handle exception
+            
         }
     }
 }

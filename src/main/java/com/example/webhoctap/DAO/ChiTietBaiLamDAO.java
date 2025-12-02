@@ -105,10 +105,11 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
                         
             while(rs.next())
             {
-                int id = rs.getInt("ID");
+                int id = rs.getInt("ID_BAILAMCT");
                 int dapanchon = rs.getInt("DAP_AN_CHON");
+                boolean ketquachon = rs.getBoolean("KIEMTRA_DS");
 
-                ChiTietBaiLam chitietbailam = new ChiTietBaiLam(id, dapanchon);
+                ChiTietBaiLam chitietbailam = new ChiTietBaiLam(id, dapanchon, ketquachon);
                 ketQua.add(chitietbailam);
             }
 
@@ -137,10 +138,11 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
 
             while(rs.next())
             {
-                int id = rs.getInt("ID");
+                int id = rs.getInt("ID_BAILAMCT");
                 int dapanchon = rs.getInt("DAP_AN_CHON");
+                boolean ketquachon = rs.getBoolean("KIEMTRA_DS");
 
-                ketQua = new ChiTietBaiLam(id, dapanchon);
+                ketQua = new ChiTietBaiLam(id, dapanchon, ketquachon);
             }
             JDBCUtil.closeConnection(c);
         }
@@ -166,10 +168,11 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             
             while(rs.next())
             {
-                int id = rs.getInt("ID");
+                int id = rs.getInt("ID_BAILAMCT");
                 int dapanchon = rs.getInt("DAP_AN_CHON");
+                boolean ketquachon = rs.getBoolean("KIEMTRA_DS");
 
-                ChiTietBaiLam chitietbailam = new ChiTietBaiLam(id, dapanchon);
+                ChiTietBaiLam chitietbailam = new ChiTietBaiLam(id, dapanchon, ketquachon);
                 ketQua.add(chitietbailam);
             }
 
@@ -180,5 +183,34 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             e.printStackTrace();
         }
         return ketQua;
+    }
+
+    //lấy đáp án người dùng chọn theo id
+    public Integer selectDapAnChonById(int id)
+    {
+        Integer dapanchon = null;
+        try
+        {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "SELECT DAP_AN_CHON FROM CHITIETBAILAM WHERE ID_BAILAMCT = ?";
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setInt(1, id);
+
+            System.out.println("Thực thi: " + sql);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) 
+            {
+                dapanchon = rs.getInt("DAP_AN_CHON");
+            }
+
+            JDBCUtil.closeConnection(c);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return dapanchon;
     }
 }
