@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.example.webhoctap.Database.JDBCUtil;
 import com.example.webhoctap.model.ChiTietBaiLam;
+import com.example.webhoctap.model.ChiTietBaiLamDS;
 
 public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
 
@@ -19,35 +20,18 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
         int ketQua = 0;
         try {
             Connection c = JDBCUtil.getConnection();
+            // Can luu lai
+            // CAUHOI_ID, DAP_AN_CHON
+            // NEU DAP_AN_CHON != QUIZ.DAP_AN_DUNG
 
-            String sql = "INSERT INTO CHITIETBAILAM (DAP_AN_CHON, KIEMTRA_DS) " +
-                    "VALUES (?,?)";
+            // TODO: doi ten cot tu TONGQUANBL_ID thanh ID_TQBL (vcv)
+
+            String sql = "INSERT INTO CHITIETBAILAM (CAUHOI_ID, DAP_AN_CHON, ID_TQBL) " +
+                    "VALUES (?,?,?)";
             PreparedStatement pst = c.prepareStatement(sql);
-            pst.setInt(1, t.getDapAnChon());
-            pst.setBoolean(2, t.getKiemTraDS());
-
-            System.out.println("Thực thi: " + sql);
-            ketQua = pst.executeUpdate();
-
-            JDBCUtil.closeConnection(c);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return ketQua;
-    }
-
-    public int update(ChiTietBaiLam t) {
-        int ketQua = 0;
-        try {
-            Connection c = JDBCUtil.getConnection();
-
-            String sql = "UPDATE CAUHOI" +
-                    "SET DAP_AN_CHON = ? " +
-                    "WHERE ID_BAILAMCT = ?";
-
-            PreparedStatement pst = c.prepareStatement(sql);
-            pst.setInt(1, t.getDapAnChon());
-            pst.setInt(2, t.getID());
+            pst.setInt(1, t.getIDQuiz());
+            pst.setInt(2, t.getDapAnChon());
+            pst.setInt(3, t.getIDTQBL());
 
             System.out.println("Thực thi: " + sql);
             ketQua = pst.executeUpdate();
@@ -92,9 +76,9 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             while (rs.next()) {
                 int id = rs.getInt("ID_BAILAMCT");
                 int dapanchon = rs.getInt("DAP_AN_CHON");
-                boolean ketquachon = rs.getBoolean("KIEMTRA_DS");
-
-                ChiTietBaiLam chitietbailam = new ChiTietBaiLam(id, dapanchon, ketquachon);
+                int idquiz = rs.getInt("CAUHOI_ID");
+                int idtqbl = rs.getInt("ID_TQBL");
+                ChiTietBaiLam chitietbailam = new ChiTietBaiLam(id, dapanchon, idquiz, idtqbl);
                 ketQua.add(chitietbailam);
             }
 
@@ -120,9 +104,9 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             while (rs.next()) {
                 int id = rs.getInt("ID_BAILAMCT");
                 int dapanchon = rs.getInt("DAP_AN_CHON");
-                boolean ketquachon = rs.getBoolean("KIEMTRA_DS");
-
-                ketQua = new ChiTietBaiLam(id, dapanchon, ketquachon);
+                int idquiz = rs.getInt("CAUHOI_ID");
+                int idtqbl = rs.getInt("ID_TQBL");
+                ketQua = new ChiTietBaiLam(id, dapanchon, idquiz, idtqbl);
             }
             JDBCUtil.closeConnection(c);
         } catch (SQLException e) {
@@ -145,9 +129,49 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             while (rs.next()) {
                 int id = rs.getInt("ID_BAILAMCT");
                 int dapanchon = rs.getInt("DAP_AN_CHON");
-                boolean ketquachon = rs.getBoolean("KIEMTRA_DS");
+                int idquiz = rs.getInt("CAUHOI_ID");
+                int idtqbl = rs.getInt("ID_TQBL");
 
-                ChiTietBaiLam chitietbailam = new ChiTietBaiLam(id, dapanchon, ketquachon);
+                ChiTietBaiLam chitietbailam = new ChiTietBaiLam(id, dapanchon, idquiz, idtqbl);
+                ketQua.add(chitietbailam);
+            }
+
+            JDBCUtil.closeConnection(c);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ketQua;
+    }
+
+    public ArrayList<ChiTietBaiLamDS> selectByTongQuanBaiLamId(int tqblid) {
+        ArrayList<ChiTietBaiLamDS> ketQua = new ArrayList<ChiTietBaiLamDS>();
+        try {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "SELECT CTBL.*, CH.* " +
+                         "FROM CHITIETBAILAM CTBL " +
+                         "JOIN CAUHOI CH ON CTBL.CAUHOI_ID = CH.ID_CAUHOI " +
+                         "WHERE CTBL.IDTQBL = ?";
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setInt(1, tqblid);
+
+            System.out.println("Thực thi: " + sql);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("ID_BAILAMCT");
+                int dapanchon = rs.getInt("DAP_AN_CHON");
+                int idquiz = rs.getInt("CAUHOI_ID");
+                // Get extra fields from join
+                String cauHoi = rs.getString("CAUHOI");
+                int dapAnDung = rs.getInt("DAP_AN_DUNG");
+                String dapAnA = rs.getString("DAP_AN_A");
+                String dapAnB = rs.getString("DAP_AN_B");
+                String dapAnC = rs.getString("DAP_AN_C");
+                String dapAnD = rs.getString("DAP_AN_D");
+
+                ChiTietBaiLamDS chitietbailam = new ChiTietBaiLamDS(id, cauHoi, dapanchon, dapAnDung, idquiz, 
+                                                                                dapAnA, dapAnB, dapAnC, dapAnD);
                 ketQua.add(chitietbailam);
             }
 

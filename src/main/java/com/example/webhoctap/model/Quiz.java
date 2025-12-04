@@ -8,10 +8,11 @@ public class Quiz {
     private String DapAnC;
     private String DapAnD;
     private int DapAnDung;
+    private int MonHocId;
 
     public Quiz()
     {}
-    public Quiz(int id, String cauhoi, String dapana, String dapanb, String dapanc, String dapand, int dapandung)
+    public Quiz(int id, String cauhoi, String dapana, String dapanb, String dapanc, String dapand, int dapandung, int monhocid)
     {
         this.id = id;
         this.CauHoi = cauhoi;
@@ -20,6 +21,7 @@ public class Quiz {
         this.DapAnC = dapanc;
         this.DapAnD = dapand;
         this.DapAnDung = dapandung;
+        this.MonHocId = monhocid;
     }
 
     public int getID()
@@ -80,8 +82,19 @@ public class Quiz {
     {
         return this.DapAnDung;
     }
+
     public void setDapAnDung(int dapandung)
     {
         this.DapAnDung = dapandung;
+    }
+
+     public int getMonHocId()
+    {
+        return this.MonHocId;
+    }
+
+    public void setMonHocId(int monhocid)
+    {
+        this.MonHocId = monhocid;
     }
 }

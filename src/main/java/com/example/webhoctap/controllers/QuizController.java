@@ -17,4 +17,19 @@ public class QuizController {
         req.setAttribute("dsQuiz", QuizDAO.getInstance().selectAll());
         return "quiz";
     }
+
+    // lay quiz theo mon hoc
+    // cach 1: dung selectByCondition
+    // @RequestMapping(value = { "/quiz/monhoc/{id}" }, method = RequestMethod.GET)
+    // public String hienThiQuizTheoMonHoc(HttpServletRequest req, @PathVariable int id) {
+    //     req.setAttribute("dsQuiz", QuizDAO.getInstance().selectByCondition("MONHOC_ID = " + id));
+    //     return "quiz_theo_monhoc";
+    // }
+
+    // cach 2: dung selectByMonHocId
+    @RequestMapping(value = { "/quiz/monhoc/{id}" }, method = RequestMethod.GET)
+    public String hienThiQuizTheoMonHoc(HttpServletRequest req, @PathVariable int id) {
+        req.setAttribute("dsQuiz", QuizDAO.getInstance().selectByMonHocId(id));
+        return "quiz_theo_monhoc";
+    }
 }

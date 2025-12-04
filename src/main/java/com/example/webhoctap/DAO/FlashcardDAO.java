@@ -23,13 +23,14 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
         {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "INSERT INTO FLASHCARD (MATTRUOC, MATSAU)" +
-                         "VALUES (?,?)";
+            String sql = "INSERT INTO FLASHCARD (MATTRUOC, MATSAU, MONHOC_ID)" +
+                         "VALUES (?,?,?)";
             
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setString(1, t.getMatTruoc());
             pst.setString(2, t.getMatSau());
-            
+            pst.setInt(3, t.getMonHocId());
+
             System.out.println("Thực thi: " + sql);
             ketQua = pst.executeUpdate();
 
@@ -50,13 +51,14 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "UPDATE FLASHCARD" +
-                         "SET MATTRUOC = ? , MATSAU = ? " +
+                         "SET MATTRUOC = ? , MATSAU = ? , MONHOC_ID = ? " +
                          "WHERE ID_CAUHOI = ?";
 
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setString(1, t.getMatTruoc());
             pst.setString(2, t.getMatSau());
-            pst.setInt(3, t.getID());
+            pst.setInt(3, t.getMonHocId());
+            pst.setInt(4, t.getID());
 
             System.out.println("Thực thi: " + sql);
             ketQua = pst.executeUpdate();
@@ -111,8 +113,9 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
                 int id = rs.getInt("ID_CAUHOI");
                 String mattruoc = rs.getString("MATTRUOC");
                 String matsau = rs.getString("MATSAU");
+                int monhocid = rs.getInt("MONHOC_ID");
 
-                Flashcard flashcard = new Flashcard(id, mattruoc, matsau);
+                Flashcard flashcard = new Flashcard(id, mattruoc, matsau, monhocid);
                 ketQua.add(flashcard);
             }
 
@@ -144,9 +147,42 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
                 int id = rs.getInt("ID_CAUHOI");
                 String mattruoc = rs.getString("MATTRUOC");
                 String matsau = rs.getString("MATSAU");
+                int monhocid = rs.getInt("MONHOC_ID");
 
-                ketQua = new Flashcard(id, mattruoc, matsau);
+                ketQua = new Flashcard(id, mattruoc, matsau, monhocid);
             }
+            JDBCUtil.closeConnection(c);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return ketQua;
+    }
+
+    public ArrayList<Flashcard> selectByMonHocId(int monhocid)
+    {
+        ArrayList<Flashcard> ketQua = new ArrayList<Flashcard>();
+        try
+        {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "SELECT * FROM FLASHCARD WHERE MONHOC_ID = ?";
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setInt(1, monhocid);
+
+            System.out.println("Thực thi: " + sql);
+            ResultSet rs = pst.executeQuery();
+            
+            while(rs.next())
+            {
+                int id = rs.getInt("ID_CAUHOI");
+                String mattruoc = rs.getString("MATTRUOC");
+                String matsau = rs.getString("MATSAU");
+                Flashcard flashcard = new Flashcard(id, mattruoc, matsau);
+                ketQua.add(flashcard);
+            }
+
             JDBCUtil.closeConnection(c);
         }
         catch(SQLException e)
@@ -174,8 +210,9 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
                 int id = rs.getInt("ID_CAUHOI");
                 String mattruoc = rs.getString("MATTRUOC");
                 String matsau = rs.getString("MATSAU");
+                int monhocid = rs.getInt("MONHOC_ID");
 
-                Flashcard flashcard = new Flashcard(id, mattruoc, matsau);
+                Flashcard flashcard = new Flashcard(id, mattruoc, matsau, monhocid);
                 ketQua.add(flashcard);
             }
 

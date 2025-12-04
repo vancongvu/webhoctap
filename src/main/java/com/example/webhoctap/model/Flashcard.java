@@ -4,18 +4,21 @@ public class Flashcard {
     private int id;
     private String MatTruoc;
     private String MatSau;
+    private int MonHocId;
 
     public Flashcard()
     {
         this.id = 0;
         this.MatTruoc = "";
         this.MatSau = "";
+        this.MonHocId = 0;
     }
-    public Flashcard(int id, String mattruoc, String matsau)
+    public Flashcard(int id, String mattruoc, String matsau, int monhocid)
     {
         this.id = id;
         this.MatTruoc = mattruoc;
         this.MatSau = matsau;
+        this.MonHocId = monhocid;
     }
 
     public int getID()
@@ -40,8 +43,19 @@ public class Flashcard {
     {
         return this.MatSau;
     }
+
     public void setMatSau(String matsau)
     {
         this.MatSau = matsau;
+    }
+
+    public int getMonHocId()
+    {
+        return this.MonHocId;
+    }
+    
+    public void setMonHocId(int monhocid)
+    {
+        this.MonHocId = monhocid;
     }
 }

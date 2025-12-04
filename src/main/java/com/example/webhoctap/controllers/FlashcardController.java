@@ -11,10 +11,17 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class FlashcardController {
 
-    // hiển thị flashcard
-    @RequestMapping(value = { "/flashcard" }, method = RequestMethod.GET)
-    public String hienThiFlashcard(HttpServletRequest req) {
-        req.setAttribute("dsFlashcard", FlashcardDAO.getInstance().selectAll());
-        return "flashcard";
+    // // hiển thị flashcard
+    // @RequestMapping(value = { "/flashcard" }, method = RequestMethod.GET)
+    // public String hienThiFlashcard(HttpServletRequest req) {
+    //     req.setAttribute("dsFlashcard", FlashcardDAO.getInstance().selectAll());
+    //     return "flashcard";
+    // }
+
+    // lay flashcard theo mon hoc
+    @RequestMapping(value = { "/flashcard/monhoc/{id}" }, method = RequestMethod.GET)
+    public String hienThiFlashcardTheoMonHoc(HttpServletRequest req, @PathVariable int id) {
+        req.setAttribute("dsFlashcard", FlashcardDAO.getInstance().selectByMonHocId(id));
+        return "flashcard_theo_monhoc";
     }
 }
