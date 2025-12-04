@@ -11,20 +11,17 @@ import com.example.webhoctap.model.Quiz;
 
 public class QuizDAO implements DAOInterface<Quiz> {
 
-    public static QuizDAO getInstance()
-    {
+    public static QuizDAO getInstance() {
         return new QuizDAO();
     }
-    
-    public int insert (Quiz t)
-    {
+
+    public int insert(Quiz t) {
         int ketQua = 0;
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "INSERT INTO CAUHOI (CAUHOI, DAP_AN_A, DAP_AN_B, DAP_AN_C, DAP_AN_D, DAP_AN_DUNG)" +
-                         "VALUES (?,?,?,?,?,?)";
+                    "VALUES (?,?,?,?,?,?)";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setString(1, t.getCauHoi());
             pst.setString(2, t.getDapAnA());
@@ -37,24 +34,20 @@ public class QuizDAO implements DAOInterface<Quiz> {
             ketQua = pst.executeUpdate();
 
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    public int update (Quiz t)
-    {
+    public int update(Quiz t) {
         int ketQua = 0;
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "UPDATE CAUHOI" +
-                         "SET CAUHOI = ? ,  DAP_AN_A = ? , DAP_AN_B = ? , DAP_AN_C = ? , DAP_AN_D = ?, DAP_AN_DUNG = ?" +
-                         "WHERE ID_CAUHOI = ?";
+                    "SET CAUHOI = ? ,  DAP_AN_A = ? , DAP_AN_B = ? , DAP_AN_C = ? , DAP_AN_D = ?, DAP_AN_DUNG = ?" +
+                    "WHERE ID_CAUHOI = ?";
 
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setString(1, t.getCauHoi());
@@ -69,19 +62,15 @@ public class QuizDAO implements DAOInterface<Quiz> {
             ketQua = pst.executeUpdate();
 
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    public int delete (Quiz t)
-    {
-       int ketQua = 0;
-        try
-        {
+    public int delete(Quiz t) {
+        int ketQua = 0;
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "DELETE FROM CAUHOI WHERE ID_CAUHOI = ?";
@@ -92,19 +81,15 @@ public class QuizDAO implements DAOInterface<Quiz> {
             ketQua = pst.executeUpdate();
 
             JDBCUtil.closeConnection(c);
-        } 
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    public ArrayList<Quiz> selectAll()
-    {
+    public ArrayList<Quiz> selectAll() {
         ArrayList<Quiz> ketQua = new ArrayList<Quiz>();
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "SELECT * FROM CAUHOI";
@@ -112,9 +97,8 @@ public class QuizDAO implements DAOInterface<Quiz> {
 
             System.out.println("Thực thi: " + sql);
             ResultSet rs = pst.executeQuery();
-                        
-            while(rs.next())
-            {
+
+            while (rs.next()) {
                 int id = rs.getInt("ID_CAUHOI");
                 String cauhoi = rs.getString("CAUHOI");
                 String dapana = rs.getString("DAP_AN_A");
@@ -128,19 +112,15 @@ public class QuizDAO implements DAOInterface<Quiz> {
             }
 
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    public Quiz selectById(Quiz t)
-    {
+    public Quiz selectById(Quiz t) {
         Quiz ketQua = null;
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "SELECT * FROM CAUHOI WHERE ID_CAUHOI = ?";
@@ -150,8 +130,7 @@ public class QuizDAO implements DAOInterface<Quiz> {
             System.out.println("Thực thi: " + sql);
             ResultSet rs = pst.executeQuery();
 
-            while(rs.next())
-            {
+            while (rs.next()) {
                 int id = rs.getInt("ID_CAUHOI");
                 String cauhoi = rs.getString("CAUHOI");
                 String dapana = rs.getString("DAP_AN_A");
@@ -163,19 +142,15 @@ public class QuizDAO implements DAOInterface<Quiz> {
                 ketQua = new Quiz(id, cauhoi, dapana, dapanb, dapanc, dapand, dapandung);
             }
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    public ArrayList<Quiz> selectByCondition(String condition)
-    {
+    public ArrayList<Quiz> selectByCondition(String condition) {
         ArrayList<Quiz> ketQua = new ArrayList<Quiz>();
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "SELECT * FROM CAUHOI WHERE " + condition;
@@ -183,9 +158,8 @@ public class QuizDAO implements DAOInterface<Quiz> {
 
             ResultSet rs = pst.executeQuery();
             System.out.println(sql);
-            
-            while(rs.next())
-            {
+
+            while (rs.next()) {
                 int id = rs.getInt("ID_CAUHOI");
                 String cauhoi = rs.getString("CAUHOI");
                 String dapana = rs.getString("DAP_AN_A");
@@ -199,25 +173,21 @@ public class QuizDAO implements DAOInterface<Quiz> {
             }
 
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    //lấy đáp án đúng theo id câu hỏi
-    public Integer selectDapAnDung(int id)
-    {
+    // lấy đáp án đúng theo id câu hỏi
+    public Integer selectDapAnDung(int idCauHoi) {
         Integer dapandung = null;
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "SELECT DAP_AN_DUNG FROM CAUHOI WHERE ID_CAUHOI = ?";
             PreparedStatement pst = c.prepareStatement(sql);
-            pst.setInt(1, id);
+            pst.setInt(1, idCauHoi);
 
             System.out.println("Thực thi: " + sql);
             ResultSet rs = pst.executeQuery();
@@ -225,11 +195,32 @@ public class QuizDAO implements DAOInterface<Quiz> {
             dapandung = rs.getInt("DAP_AN_DUNG");
 
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return dapandung;
+    }
+
+    // đếm số lượng quiz
+    public int countAll() {
+        int tong = 0;
+        try {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "SELECT COUNT(*) AS TONG FROM CAUHOI";
+            PreparedStatement pst = c.prepareStatement(sql);
+
+            System.out.println("Thực thi: " + sql);
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                tong = rs.getInt("TONG");
+            }
+
+            JDBCUtil.closeConnection(c);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tong;
     }
 }

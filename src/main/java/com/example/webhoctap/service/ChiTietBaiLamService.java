@@ -1,27 +1,21 @@
 package com.example.webhoctap.service;
 
 import com.example.webhoctap.DAO.ChiTietBaiLamDAO;
-import com.example.webhoctap.DAO.QuizDAO;
 import com.example.webhoctap.model.ChiTietBaiLam;
 
 public class ChiTietBaiLamService {
 
+    // LƯU BÀI NGƯỜI DÙNG ĐÃ LÀM VÀO CHITIETBAILAM
+    public void luuChiTietBaiLam(int id, int dapanNguoiDung) {
+        boolean checkdapan = QuizService.getInstance().kiemtraDapAn(id, dapanNguoiDung);
 
-    public boolean CheckDapAn(int id)
-    {
-        boolean ketQua;
-        Integer dapandung = QuizDAO.getInstance().selectDapAnDung(id);
-        Integer dapanchon = ChiTietBaiLamDAO.getInstance().selectDapAnChonById(id);
-        if(dapanchon == dapandung)
-        {
-            ketQua = true;
-        }
-        else
-        {
-            ketQua = false;
-        }
-        ChiTietBaiLam chitiet = ChiTietBaiLamDAO.getInstance().selectById(id);
-        chitiet.setKiemTraDS(ketQua);
-        return ketQua;        
+        // tạo đối tượng CHITIETBAILAM
+        ChiTietBaiLam ct = new ChiTietBaiLam();
+        ct.setDapAnChon(dapanNguoiDung);
+        ct.setKiemTraDS(checkdapan);
+
+        // lưu vào database
+        ChiTietBaiLamDAO.getInstance().insert(ct);
     }
+
 }

@@ -5,38 +5,36 @@ public class ChiTietBaiLam {
     private int DapAnChon;
     private boolean KiemTraDS;
 
-    public ChiTietBaiLam()
-    {}
-    public ChiTietBaiLam(int id, int dapanchon)
-    {
-        this.id = id;
-        this.DapAnChon = dapanchon;
+    public ChiTietBaiLam() {
     }
 
-    public int getID()
-    {
+    public ChiTietBaiLam(int id, int dapanchon, boolean kiemtrads) {
+        this.id = id;
+        this.DapAnChon = dapanchon;
+        this.KiemTraDS = kiemtrads;
+    }
+
+    public int getID() {
         return this.id;
     }
-    public void setID(int id)
-    {
+
+    public void setID(int id) {
         this.id = id;
     }
 
-    public int getDapAnChon()
-    {
+    public int getDapAnChon() {
         return this.DapAnChon;
     }
-    public void setDapAnChon(int dapanchon)
-    {
+
+    public void setDapAnChon(int dapanchon) {
         this.DapAnChon = dapanchon;
     }
-    
-    public boolean getKiemTraDS()
-    {
+
+    public boolean getKiemTraDS() {
         return this.KiemTraDS;
     }
-    public void setKiemTraDS(boolean kiemtrads)
-    {
+
+    public void setKiemTraDS(boolean kiemtrads) {
         this.KiemTraDS = kiemtrads;
     }
 }

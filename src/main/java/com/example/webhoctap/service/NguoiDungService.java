@@ -1,37 +1,33 @@
 package com.example.webhoctap.service;
 
-import java.util.ArrayList;
-
 import com.example.webhoctap.DAO.NguoiDungDAO;
 import com.example.webhoctap.model.NguoiDung;
 
 public class NguoiDungService {
-    
-    //Đăng ký
-    public boolean DangKy(NguoiDung user)
-    {
-        //kiểm tra user trùng tên đăng nhập
-        String condition = "TENDANGNHAP = '" + user.getTenDangNhap() + "'";
-        ArrayList<NguoiDung> dsUser = NguoiDungDAO.getInstance().selectByCondition(condition);
-        if(dsUser.size() > 0)
-        {
-            return false; //user bị trùng
+
+    public static NguoiDungService getInstance() {
+        return new NguoiDungService();
+    }
+
+    // Đăng ký
+    public boolean DangKy(NguoiDung user) {
+        // kiểm tra user trùng tên đăng nhập
+        int id = NguoiDungDAO.getInstance().selectTenDangNhap(user.getTenDangNhap());
+        if (id != -1) {
+            return false; // user bị trùng
         }
 
-        //nếu không trùng thì thêm vào bảng NGUOIDUNG
+        // nếu không trùng thì thêm vào bảng NGUOIDUNG
         NguoiDungDAO.getInstance().insert(user);
         return true;
     }
 
-    public NguoiDung DangNhap(String user, String pass)
-    {
-        String condition = "TENDANGNHAP = '" + user + "' AND MATKHAU = '" + pass + "'";
-        ArrayList<NguoiDung> dsUser = NguoiDungDAO.getInstance().selectByCondition(condition);
-        //kiểm tra người dùng đã đăng ký tài khoản?
-        if(dsUser.size() == 0)
-        {
-            return null; //tài khoản không tồn tại
+    public NguoiDung DangNhap(String user, String pass) {
+        NguoiDung nd = NguoiDungDAO.getInstance().selectByUserPass(user, pass);
+        // kiểm tra người dùng đã đăng ký tài khoản?
+        if (nd == null) {
+            return null; // tài khoản không tồn tại
         }
-        return dsUser.get(0); // trả về người dùng đầu tiên do tên đăng nhập chỉ dùng cho 1 tài khoản
+        return nd; // trả về người dùng
     }
 }

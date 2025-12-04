@@ -11,45 +11,39 @@ import com.example.webhoctap.model.ChiTietBaiLam;
 
 public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
 
-    public static ChiTietBaiLamDAO getInstance()
-    {
+    public static ChiTietBaiLamDAO getInstance() {
         return new ChiTietBaiLamDAO();
     }
-    
-    public int insert (ChiTietBaiLam t)
-    {
+
+    public int insert(ChiTietBaiLam t) {
         int ketQua = 0;
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "INSERT INTO CHITIETBAILAM (DAP_AN_CHON)" +
-                         "VALUES (?)";
+            String sql = "INSERT INTO CHITIETBAILAM (DAP_AN_CHON, KIEMTRA_DS) " +
+                    "VALUES (?,?)";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setInt(1, t.getDapAnChon());
+            pst.setBoolean(2, t.getKiemTraDS());
 
             System.out.println("Thực thi: " + sql);
             ketQua = pst.executeUpdate();
 
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    public int update (ChiTietBaiLam t)
-    {
+    public int update(ChiTietBaiLam t) {
         int ketQua = 0;
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "UPDATE CAUHOI" +
-                         "SET DAP_AN_CHON = ? " +
-                         "WHERE ID_BAILAMCT = ?";
+                    "SET DAP_AN_CHON = ? " +
+                    "WHERE ID_BAILAMCT = ?";
 
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setInt(1, t.getDapAnChon());
@@ -59,19 +53,15 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             ketQua = pst.executeUpdate();
 
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    public int delete (ChiTietBaiLam t)
-    {
-       int ketQua = 0;
-        try
-        {
+    public int delete(ChiTietBaiLam t) {
+        int ketQua = 0;
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "DELETE FROM CHITIETBAILAM WHERE ID_BAILAMCT = ?";
@@ -82,19 +72,15 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             ketQua = pst.executeUpdate();
 
             JDBCUtil.closeConnection(c);
-        } 
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    public ArrayList<ChiTietBaiLam> selectAll()
-    {
+    public ArrayList<ChiTietBaiLam> selectAll() {
         ArrayList<ChiTietBaiLam> ketQua = new ArrayList<ChiTietBaiLam>();
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "SELECT * FROM CHITIETBAILAM";
@@ -102,9 +88,8 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
 
             System.out.println("Thực thi: " + sql);
             ResultSet rs = pst.executeQuery();
-                        
-            while(rs.next())
-            {
+
+            while (rs.next()) {
                 int id = rs.getInt("ID_BAILAMCT");
                 int dapanchon = rs.getInt("DAP_AN_CHON");
                 boolean ketquachon = rs.getBoolean("KIEMTRA_DS");
@@ -114,19 +99,15 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             }
 
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    public ChiTietBaiLam selectById(ChiTietBaiLam t)
-    {
+    public ChiTietBaiLam selectById(ChiTietBaiLam t) {
         ChiTietBaiLam ketQua = null;
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "SELECT * FROM CHITIETBAILAM WHERE ID_BAILAMCT = ?";
@@ -136,8 +117,7 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             System.out.println("Thực thi: " + sql);
             ResultSet rs = pst.executeQuery();
 
-            while(rs.next())
-            {
+            while (rs.next()) {
                 int id = rs.getInt("ID_BAILAMCT");
                 int dapanchon = rs.getInt("DAP_AN_CHON");
                 boolean ketquachon = rs.getBoolean("KIEMTRA_DS");
@@ -145,19 +125,15 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
                 ketQua = new ChiTietBaiLam(id, dapanchon, ketquachon);
             }
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    public ArrayList<ChiTietBaiLam> selectByCondition(String condition)
-    {
+    public ArrayList<ChiTietBaiLam> selectByCondition(String condition) {
         ArrayList<ChiTietBaiLam> ketQua = new ArrayList<ChiTietBaiLam>();
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "SELECT * FROM CHITIETBAILAM WHERE " + condition;
@@ -165,9 +141,8 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
 
             ResultSet rs = pst.executeQuery();
             System.out.println(sql);
-            
-            while(rs.next())
-            {
+
+            while (rs.next()) {
                 int id = rs.getInt("ID_BAILAMCT");
                 int dapanchon = rs.getInt("DAP_AN_CHON");
                 boolean ketquachon = rs.getBoolean("KIEMTRA_DS");
@@ -177,20 +152,16 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             }
 
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ketQua;
     }
 
-    //lấy đáp án người dùng chọn theo id
-    public Integer selectDapAnChonById(int id)
-    {
+    // lấy đáp án người dùng chọn theo id
+    public Integer selectDapAnChonById(int id) {
         Integer dapanchon = null;
-        try
-        {
+        try {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "SELECT DAP_AN_CHON FROM CHITIETBAILAM WHERE ID_BAILAMCT = ?";
@@ -200,15 +171,12 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             System.out.println("Thực thi: " + sql);
             ResultSet rs = pst.executeQuery();
 
-            if (rs.next()) 
-            {
+            if (rs.next()) {
                 dapanchon = rs.getInt("DAP_AN_CHON");
             }
 
             JDBCUtil.closeConnection(c);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return dapanchon;

@@ -13,7 +13,7 @@ public class TongQuanBaiLamService {
     {
         int socaudung = QuizService.getInstance().tinhDiem(id, dapanNguoiDung);
         int tongsocau = QuizDAO.getInstance().countAll();
-        float tongdiem = ((double) socaudung/tongsocau) * 10;
+        float tongdiem = ((float) socaudung/tongsocau) * 10;
 
 
         //tạo đối tượng TONGQUANBAILAM
@@ -21,7 +21,7 @@ public class TongQuanBaiLamService {
         tq.setTongDiem(tongdiem);
         tq.setSoCauDung(socaudung);
         tq.setTongSoCau(tongsocau);
-        tq.setThoiGian();
+        tq.setThoiGian(Timestamp.valueOf(LocalDateTime.now()));
 
         TongQuanBaiLamDAO.getInstance().insert(tq);
     }
