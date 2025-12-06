@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - Web Học Tập</title>
+    <script src="https://kit.fontawesome.com/edc699b38d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .dangnhap-dangky
+        {
+            background-color: #F3F4F6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        div
+        {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 10px 10px 0px 0px;
+            border-color: #F3F4F6;
+        }
+
+        div a button
+        {
+            width: 220px;
+            height: 40px;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* nền thanh chọn */
+
+        .phan-dang-nhap
+        {
+            background-color: #F3F4F6;
+            color: black;
+            border-radius: 10px 0px 0px 0px;
+        }
+
+        .phan-dang-ky
+        {
+            background-color: #F3F4F6;
+            color: black;
+            border-radius: 0px 10px 0px 0px;
+        }
+
+        /* đổi màu chọn button */
+        #dang-nhap:target ~ div a .phan-dang-nhap,      /* khi #dang-nhap được kích hoạt */
+        body:not(:has(:target)) div a .phan-dang-nhap   /* đặt làm mặc định*/
+        {
+            background-color: white;
+            color: #4F46E5;
+            font-weight: bold;
+        }
+
+        #dang-ky:target ~ div a .phan-dang-ky           /* khi #dang-ky được kích hoạt */
+        {
+            background-color: white;
+            color: #4F46E5;
+            font-weight: bold;
+        }
+
+        /* vùng chứa form */
+        section
+        {
+            width: 400px;
+            background-color: white;
+            border-radius: 0px 0px 10px 10px;
+            padding: 20px;
+        }
+
+        form /* ẩn form */
+        {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* CHỈ HIỆN FORM KHI CÓ YÊU CẦU */
+
+        #dang-nhap:target ~ section .form-dang-nhap,    /* hiện form đăng nhập khi chọn #dang-nhap */ 
+        body:not(:has(:target)) section .form-dang-nhap /* hiện form đăng nhập mặc định khi vào trang */
+        {
+            display: flex;
+        }
+
+        /* hiện form đăng ký khi chọn #dang-ky*/
+        #dang-ky:target ~ section .form-dang-ky
+        {
+            display: flex;
+        }
+
+        .tieu-de
+        {
+            
+            color: #4F46E5;
+            text-align: center;
+            font-weight: bolder;
+            font-size: 1.8rem;
+            margin-top: 10px;
+        }
+
+        input
+        {
+            padding: 10px;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 5px;
+            border-color: #9CA3AF;
+        }
+
+        .quen-mat-khau
+        {
+            border: none;
+            background-color: white;
+            color: #4F46E5;
+            text-decoration: underline;
+            cursor: pointer;
+            align-self: flex-start;
+        }
+
+        .button
+        {
+            background-color: #4F46E5;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <a href="TrangChu.html">
+            <i class="fa-solid fa-brain"></i>
+        </a>      
+    </header>
+    <main class="dangnhap-dangky">
+        <!-- 2 trang định danh-->
+        <div id="dang-nhap"></div>
+        <div id="dang-ky"></div>
+        <!-- thanh chọn -->
+        <div>
+            <a href="#dang-nhap"><button class="phan-dang-nhap">Đăng Nhập</button></a>
+            <a href="#dang-ky"><button class="phan-dang-ky">Đăng Ký</button></a>
+        </div>
+        <section>
+            <!-- form đăng nhập -->
+            <form class="form-dang-nhap">
+                <h2 class="tieu-de">Đăng Nhập</h2>
+                <b>User</b>
+                <input type="text" placeholder="Nhập User">
+                <b>Password</b>
+                <input type="password" placeholder="Nhập Password">
+                <button class="quen-mat-khau"><u>Quên mật khẩu</u></button>
+                <button class="button" type="submit">Đăng Nhập</button>
+            </form>
+    
+            <!-- form đăng ký -->
+            <form class="form-dang-ky">
+                <h2 class="tieu-de">Đăng Ký</h2>
+                <b>User</b>
+                <input type="text" placeholder="Nhập User">
+                <b>Email</b>
+                <input type="text" placeholder="Nhập Email">
+                <b>Password</b>
+                <input type="password" placeholder="Nhập Password">
+                <b>Nhập Lại Password</b>
+                <input type="password" placeholder="Nhập Lại Password">
+                <button class="button" type="submit">Đăng Ký</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Web Học Tập. All rights reserved.</p>
+    </footer>
+</body>
+</html>

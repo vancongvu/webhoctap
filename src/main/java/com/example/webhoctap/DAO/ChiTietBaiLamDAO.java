@@ -43,6 +43,31 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
         return ketQua;
     }
 
+    public int update(ChiTietBaiLam t) {
+        int ketQua = 0;
+        try {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "UPDATE CHITIETBAILAM " +
+                    "SET CAUHOI_ID = ? , DAP_AN_CHON = ? , ID_TQBL = ? " +
+                    "WHERE ID_BAILAMCT = ?";
+
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setInt(1, t.getIDQuiz());
+            pst.setInt(2, t.getDapAnChon());
+            pst.setInt(3, t.getIDTQBL());
+            pst.setInt(4, t.getID());
+
+            System.out.println("Thực thi: " + sql);
+            ketQua = pst.executeUpdate();
+
+            JDBCUtil.closeConnection(c);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ketQua;
+    }
+
     public int delete(ChiTietBaiLam t) {
         int ketQua = 0;
         try {
@@ -149,9 +174,9 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "SELECT CTBL.*, CH.* " +
-                         "FROM CHITIETBAILAM CTBL " +
-                         "JOIN CAUHOI CH ON CTBL.CAUHOI_ID = CH.ID_CAUHOI " +
-                         "WHERE CTBL.IDTQBL = ?";
+                    "FROM CHITIETBAILAM CTBL " +
+                    "JOIN CAUHOI CH ON CTBL.CAUHOI_ID = CH.ID_CAUHOI " +
+                    "WHERE CTBL.IDTQBL = ?";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setInt(1, tqblid);
 
@@ -170,8 +195,8 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
                 String dapAnC = rs.getString("DAP_AN_C");
                 String dapAnD = rs.getString("DAP_AN_D");
 
-                ChiTietBaiLamDS chitietbailam = new ChiTietBaiLamDS(id, cauHoi, dapanchon, dapAnDung, idquiz, 
-                                                                                dapAnA, dapAnB, dapAnC, dapAnD);
+                ChiTietBaiLamDS chitietbailam = new ChiTietBaiLamDS(id, cauHoi, dapanchon, dapAnDung, idquiz,
+                        dapAnA, dapAnB, dapAnC, dapAnD);
                 ketQua.add(chitietbailam);
             }
 

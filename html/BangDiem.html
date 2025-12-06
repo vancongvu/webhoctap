@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Điểm - Web Học Tập</title>
+    <script src="https://kit.fontawesome.com/edc699b38d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        section
+        {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+        article
+        {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding:10px;
+            margin-top: 20px;
+            width: 700px;
+            border: 1px solid;
+            border-radius: 10px;
+            border-color: white;
+            background-color: white;
+        }
+        .chude, .diem
+        {
+            font-weight: bold;
+        }
+        main button
+        {
+            background-color: #d6dcff;
+            border-radius: 5px;
+            border-color: #d6dcff;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: #0000ee;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <a href="TrangChu.html">
+            <i class="fa-solid fa-brain"></i>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="TrangChu.html">Trang Chủ</a></li>
+                <li><a href="HocTap.html">Học Tập</a></li>
+                <li class="active"><a href="BangDiem.html">Bảng Điểm</a></li>
+                <li><a href="GioiThieu.html">Giới Thiệu</a></li>
+            </ul>
+        </nav>
+        <div>
+            <a href="#" class="dangnhap">Đăng Nhập</a>
+            <a href="#" class="dangky">Đăng Ký</a>
+        </div>
+    </header>
+    <main>
+        <section>
+            <h1>Lịch Sử Làm Bài</h1>
+            <article>
+                <p id="ten-chu-de" class = "chude"></p>
+                <p id="diemso" class = "diem"></p>
+                <button>Xem Lại</button>               
+            </article>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Web Học Tập. All rights reserved.</p>
+    </footer>
+</body>
+</html>
+
+ <script>
+    let hienThiDiem = document.getElementById('diemso');
+    const chude = document.getElementById('ten-chu-de');
+
+    const monHienTai = localStorage.getItem('tenchudea');
+    chude.textContent = monHienTai;
+    const diemHienTai = localStorage.getItem('diemluu');
+    const tongSoCau = localStorage.getItem('tongsocau');
+    hienThiDiem.textContent = "Điểm: " + diemHienTai + "/" + tongSoCau;
+</script>
