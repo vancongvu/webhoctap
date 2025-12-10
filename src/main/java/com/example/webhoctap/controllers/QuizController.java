@@ -1,10 +1,15 @@
 package com.example.webhoctap.controllers;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.webhoctap.DAO.QuizDAO;
+import com.example.webhoctap.model.Quiz;
+import com.example.webhoctap.service.QuizService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -12,24 +17,10 @@ import jakarta.servlet.http.HttpServletRequest;
 public class QuizController {
 
     // hiển thị quiz
-    @RequestMapping(value = { "/quiz" }, method = RequestMethod.GET)
-    public String hienThiQuiz(HttpServletRequest req) {
-        req.setAttribute("dsQuiz", QuizDAO.getInstance().selectAll());
-        return "quiz";
-    }
-
-    // lay quiz theo mon hoc
-    // cach 1: dung selectByCondition
-    // @RequestMapping(value = { "/quiz/monhoc/{id}" }, method = RequestMethod.GET)
-    // public String hienThiQuizTheoMonHoc(HttpServletRequest req, @PathVariable int id) {
-    //     req.setAttribute("dsQuiz", QuizDAO.getInstance().selectByCondition("MONHOC_ID = " + id));
-    //     return "quiz_theo_monhoc";
-    // }
-
-    // cach 2: dung selectByMonHocId
+    @ResponseBody
     @RequestMapping(value = { "/quiz/monhoc/{id}" }, method = RequestMethod.GET)
-    public String hienThiQuizTheoMonHoc(HttpServletRequest req, @PathVariable int id) {
-        req.setAttribute("dsQuiz", QuizDAO.getInstance().selectByMonHocId(id));
-        return "quiz_theo_monhoc";
+    public ArrayList<Quiz> hienThiQuizTheoMonHoc(HttpServletRequest req, @PathVariable int id) 
+    {
+        return QuizService.getInstance().QuizByMonHocId(id);
     }
 }

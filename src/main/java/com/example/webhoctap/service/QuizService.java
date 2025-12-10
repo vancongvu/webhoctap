@@ -1,10 +1,19 @@
 package com.example.webhoctap.service;
 
+import java.util.ArrayList;
+
 import com.example.webhoctap.DAO.QuizDAO;
+import com.example.webhoctap.model.Quiz;
 
 public class QuizService {
     public static QuizService getInstance() {
         return new QuizService();
+    }
+
+    //lấy danh sách quiz theo id (vcv)
+    public ArrayList<Quiz> QuizByMonHocId(int id)
+    {
+        return QuizDAO.getInstance().selectByMonHocId(id);
     }
 
     // kiểm tra đáp án người dùng chọn

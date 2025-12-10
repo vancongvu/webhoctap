@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import com.example.webhoctap.Database.JDBCUtil;
 import com.example.webhoctap.model.TongQuanBaiLam;
+import com.example.webhoctap.model.TongQuanBaiLamDS;
 
 public class TongQuanBaiLamDAO implements DAOInterface<TongQuanBaiLam> {
 
@@ -24,13 +25,15 @@ public class TongQuanBaiLamDAO implements DAOInterface<TongQuanBaiLam> {
         {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "INSERT INTO TONGQUANBAILAM (TONGDIEM, SOCAUDUNG, TONGSOCAU, THOI_GIAN_LAM)" +
-                         "VALUES (?,?,?,?)";
+            String sql = "INSERT INTO TONGQUANBAILAM (TONGDIEM, SOCAUDUNG, TONGSOCAU, THOI_GIAN_LAM, MONHOC_ID, NGUOIDUNG_ID)" +
+                         "VALUES (?,?,?,?,?,?)";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setFloat(1, t.getTongDiem());
             pst.setInt(2, t.getSoCauDung());
             pst.setInt(3, t.getTongSoCau());
             pst.setTimestamp(4, t.getThoiGian());
+            pst.setInt(5, t.getMonHocId());
+            pst.setInt(6, t.getNguoiDungId());
 
             System.out.println("Thực thi: " + sql);
             ketQua = pst.executeUpdate();
@@ -117,8 +120,52 @@ public class TongQuanBaiLamDAO implements DAOInterface<TongQuanBaiLam> {
                 int socadung = rs.getInt("SOCAUDUNG");
                 int tongsocau = rs.getInt("TONGSOCAU");
                 Timestamp thoigian = rs.getTimestamp("THOI_GIAN_LAM");
+                int monhocid = rs.getInt("MONHOC_ID");
+                int nguoidungid = rs.getInt("NGUOIDUNG_ID");
 
-                TongQuanBaiLam tongquanbailam = new TongQuanBaiLam(id, tongdiem, socadung, tongsocau, thoigian);
+                TongQuanBaiLam tongquanbailam = new TongQuanBaiLam(id, tongdiem, socadung, tongsocau, thoigian, monhocid, nguoidungid);
+                ketQua.add(tongquanbailam);
+            }
+
+            JDBCUtil.closeConnection(c);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return ketQua;
+    }
+
+    //lấy tất cả tổng quan bài làm theo user
+    public ArrayList<TongQuanBaiLamDS> selectAllByUserID(int idUser)
+    {
+        ArrayList<TongQuanBaiLamDS> ketQua = new ArrayList<TongQuanBaiLamDS>();
+        try
+        {
+            Connection c = JDBCUtil.getConnection();
+
+            String sql = "SELECT tq.ID_TQBL, tq.TONGDIEM, tq.SOCAUDUNG, tq.TONGSOCAU, tq.THOI_GIAN_LAM, mh.TENMONHOC " +
+                         "FROM TONGQUANBAILAM tq " +
+                         "JOIN MONHOC mh ON tq.MONHOC_ID = mh.ID_MONHOC " +
+                         "WHERE tq.NGUOIDUNG_ID = ? " +
+                         "ORDER BY tq.THOI_GIAN_LAM DESC";
+;
+            PreparedStatement pst = c.prepareStatement(sql);
+            pst.setInt(1, idUser);
+
+            System.out.println("Thực thi: " + sql);
+            ResultSet rs = pst.executeQuery();
+                        
+            while(rs.next())
+            {
+                int id = rs.getInt("ID_TQBL");
+                String tenmonhoc = rs.getString("TENMONHOC");
+                float tongdiem = rs.getFloat("TONGDIEM");
+                int socaudung = rs.getInt("SOCAUDUNG");
+                int tongsocau = rs.getInt("TONGSOCAU");
+                Timestamp thoigian = rs.getTimestamp("THOI_GIAN_LAM");
+                
+                TongQuanBaiLamDS tongquanbailam = new TongQuanBaiLamDS(id, tenmonhoc, tongdiem, socaudung, tongsocau, thoigian);
                 ketQua.add(tongquanbailam);
             }
 
@@ -152,8 +199,10 @@ public class TongQuanBaiLamDAO implements DAOInterface<TongQuanBaiLam> {
                 int socadung = rs.getInt("SOCAUDUNG");
                 int tongsocau = rs.getInt("TONGSOCAU");
                 Timestamp thoigian = rs.getTimestamp("THOI_GIAN_LAM");
+                int monhocid = rs.getInt("MONHOC_ID");
+                int nguoidungid = rs.getInt("NGUOIDUNG_ID");
 
-                ketQua = new TongQuanBaiLam(id, tongdiem, socadung, tongsocau, thoigian);
+                ketQua = new TongQuanBaiLam(id, tongdiem, socadung, tongsocau, thoigian, monhocid, nguoidungid);
             }
             JDBCUtil.closeConnection(c);
         }
@@ -184,8 +233,10 @@ public class TongQuanBaiLamDAO implements DAOInterface<TongQuanBaiLam> {
                 int socadung = rs.getInt("SOCAUDUNG");
                 int tongsocau = rs.getInt("TONGSOCAU");
                 Timestamp thoigian = rs.getTimestamp("THOI_GIAN_LAM");
+                int monhocid = rs.getInt("MONHOC_ID");
+                int nguoidungid = rs.getInt("NGUOIDUNG_ID");
 
-                TongQuanBaiLam tongquanbailam = new TongQuanBaiLam(id, tongdiem, socadung, tongsocau, thoigian);
+                TongQuanBaiLam tongquanbailam = new TongQuanBaiLam(id, tongdiem, socadung, tongsocau, thoigian, monhocid, nguoidungid);
                 ketQua.add(tongquanbailam);
             }
 

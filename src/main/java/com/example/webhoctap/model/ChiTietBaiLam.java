@@ -32,14 +32,6 @@ public class ChiTietBaiLam {
         this.DapAnChon = dapanchon;
     }
 
-    public boolean getKiemTraDS() {
-        return this.KiemTraDS;
-    }
-
-    public void setKiemTraDS(boolean kiemtrads) {
-        this.KiemTraDS = kiemtrads;
-    }
-
     public int getIDQuiz() {
         return this.IDQuiz;
     }

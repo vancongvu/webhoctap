@@ -1,10 +1,14 @@
 package com.example.webhoctap.controllers;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.webhoctap.DAO.MonHocDAO;
+import com.example.webhoctap.model.MonHoc;
+import com.example.webhoctap.service.MonHocService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -12,9 +16,10 @@ import jakarta.servlet.http.HttpServletRequest;
 public class MonHocController {
 
     // hiển thị danh sách môn học
-    @RequestMapping(value = { "/monhoc" }, method = RequestMethod.GET)
-    public String hienThiDanhSachMonHoc(HttpServletRequest req) {
-        req.setAttribute("dsMonHoc", MonHocDAO.getInstance().selectAll());
-        return "monhoc";
+    @ResponseBody
+    @RequestMapping(value = { "/hoctap" }, method = RequestMethod.GET)
+    public ArrayList<MonHoc> hienThiDanhSachMonHoc(HttpServletRequest req) 
+    {
+        return MonHocService.getInstance().selectAll();
     }
 }

@@ -179,7 +179,7 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
                 int id = rs.getInt("ID_CAUHOI");
                 String mattruoc = rs.getString("MATTRUOC");
                 String matsau = rs.getString("MATSAU");
-                Flashcard flashcard = new Flashcard(id, mattruoc, matsau);
+                Flashcard flashcard = new Flashcard(id, mattruoc, matsau, monhocid);
                 ketQua.add(flashcard);
             }
 

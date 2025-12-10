@@ -74,15 +74,15 @@
         </a>
         <nav>
             <ul>
-                <li class="active"><a href="TrangChu.html">Trang Chủ</a></li>
-                <li><a href="HocTap.html">Học Tập</a></li>
-                <li><a href="BangDiem.html">Bảng Điểm</a></li>
-                <li><a href="GioiThieu.html">Giới Thiệu</a></li>
+                <li class="active"><a th:href="@{/trangchu}">Trang Chủ</a></li>
+                <li><a th:href="@{/hoctap}">Học Tập</a></li>
+                <li><a th:href="@{/bangdiem}">Bảng Điểm</a></li>
+                <li><a th:href="@{/gioithieu}">Giới Thiệu</a></li>
             </ul>
         </nav>
         <div>
-            <a href="DangNhap-DangKy.html#dang-nhap" class="dangnhap">Đăng Nhập</a>
-            <a href="DangNhap-DangKy.html#dang-ky" class="dangky">Đăng Ký</a>
+            <a th:href="@{/DangNhap-DangKy.html#dang-nhap}" class="dangnhap">Đăng Nhập</a>
+            <a th:href="@{DangNhap-DangKy.html#dang-ky}" class="dangky">Đăng Ký</a>
         </div>
     </header>
     <main>
@@ -91,7 +91,7 @@
             <h1 class="webht"><strong>Web Học Tập Quiz và FlashCard</strong></h1>
             <p class="mota">Trải nghiệm phương pháp học tập tương tác với Flashcard và Quiz,<br>
                 được hỗ trợ bởi AI để giải đáp mọi thắc mắc và theo dõi tiến độ của bạn.</p>
-            <a href="HocTap.html">Bắt Đầu Học Ngay!</a>
+            <a href="/hoctap">Bắt Đầu Học Ngay!</a>
             <section class="tinhnang">
                 <article>
                     <img src="../img/layers.png" alt="layers" width="40" height="40">

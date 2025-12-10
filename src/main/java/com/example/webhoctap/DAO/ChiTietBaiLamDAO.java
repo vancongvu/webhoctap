@@ -187,7 +187,6 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
                 int id = rs.getInt("ID_BAILAMCT");
                 int dapanchon = rs.getInt("DAP_AN_CHON");
                 int idquiz = rs.getInt("CAUHOI_ID");
-                // Get extra fields from join
                 String cauHoi = rs.getString("CAUHOI");
                 int dapAnDung = rs.getInt("DAP_AN_DUNG");
                 String dapAnA = rs.getString("DAP_AN_A");
@@ -195,8 +194,7 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
                 String dapAnC = rs.getString("DAP_AN_C");
                 String dapAnD = rs.getString("DAP_AN_D");
 
-                ChiTietBaiLamDS chitietbailam = new ChiTietBaiLamDS(id, cauHoi, dapanchon, dapAnDung, idquiz,
-                        dapAnA, dapAnB, dapAnC, dapAnD);
+                ChiTietBaiLamDS chitietbailam = new ChiTietBaiLamDS(id, cauHoi, dapanchon, dapAnDung, idquiz, dapAnA, dapAnB, dapAnC, dapAnD);
                 ketQua.add(chitietbailam);
             }
 

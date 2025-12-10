@@ -8,16 +8,20 @@ public class TongQuanBaiLam {
     private int SoCauDung;
     private int TongSoCau;
     private Timestamp ThoiGian;
+    private int MonHocID;
+    private int NguoiDungID;
 
     public TongQuanBaiLam()
     {}
-    public TongQuanBaiLam(int id, float TongDiem, int SoCauDung, int TongSoCau, Timestamp ThoiGian)
+    public TongQuanBaiLam(int id, float TongDiem, int SoCauDung, int TongSoCau, Timestamp ThoiGian, int MonHocID, int NguoiDungID)
     {
         this.id = id;
         this.TongDiem = TongDiem;
         this. SoCauDung = SoCauDung;
         this.TongSoCau = TongSoCau;
         this.ThoiGian = ThoiGian;
+        this.MonHocID = MonHocID;
+        this.NguoiDungID = NguoiDungID;
     }
 
     public int getID()
@@ -63,5 +67,23 @@ public class TongQuanBaiLam {
     public void setThoiGian(Timestamp ThoiGian)
     {
         this.ThoiGian = ThoiGian;
+    }
+
+    public int getMonHocId()
+    {
+        return this.MonHocID;
+    }
+    public void setMonHocId(int id)
+    {
+        this.id = id;
+    }
+    
+    public int getNguoiDungId()
+    {
+        return this.NguoiDungID;
+    }
+    public void setNguoiDungId(int id)
+    {
+        this.NguoiDungID = id;
     }
 }

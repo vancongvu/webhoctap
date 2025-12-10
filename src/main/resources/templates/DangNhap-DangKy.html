@@ -157,28 +157,27 @@
         </div>
         <section>
             <!-- form đăng nhập -->
-            <form class="form-dang-nhap">
+            <form class="form-dang-nhap" th:action="@{/dangnhap}" method="post">
                 <h2 class="tieu-de">Đăng Nhập</h2>
                 <b>User</b>
-                <input type="text" placeholder="Nhập User">
+                <input type="text" name="tendangnhap" placeholder="Nhập User" required>
                 <b>Password</b>
-                <input type="password" placeholder="Nhập Password">
-                <button class="quen-mat-khau"><u>Quên mật khẩu</u></button>
+                <input type="password" name="matkhau" placeholder="Nhập Password" required>
                 <button class="button" type="submit">Đăng Nhập</button>
+                <p th:text = "${message}" style = "color: red;"></p>
             </form>
     
             <!-- form đăng ký -->
-            <form class="form-dang-ky">
+            <form class="form-dang-ky" th:action="@{/dangky}" method="post">
                 <h2 class="tieu-de">Đăng Ký</h2>
+                <b>Họ Tên</b>
+                <input type="text" name="hoten" placeholder="Nhập Họ Tên" required>
                 <b>User</b>
-                <input type="text" placeholder="Nhập User">
-                <b>Email</b>
-                <input type="text" placeholder="Nhập Email">
+                <input type="text" name="tendangnhap" placeholder="Nhập User" required>
                 <b>Password</b>
-                <input type="password" placeholder="Nhập Password">
-                <b>Nhập Lại Password</b>
-                <input type="password" placeholder="Nhập Lại Password">
+                <input type="password" name="matkhau" placeholder="Nhập Password" required>
                 <button class="button" type="submit">Đăng Ký</button>
+                <p th:text = "${message}" style = "color: red;"></p>
             </form>
         </section>
     </main>

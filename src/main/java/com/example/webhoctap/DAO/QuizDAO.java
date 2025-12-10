@@ -183,7 +183,6 @@ public class QuizDAO implements DAOInterface<Quiz> {
         return ketQua;
     }
 
-    // cach 2: dung selectByMonHocId
     public ArrayList<Quiz> selectByMonHocId(int monhocid) {
         ArrayList<Quiz> ketQua = new ArrayList<Quiz>();
         try {
@@ -205,7 +204,7 @@ public class QuizDAO implements DAOInterface<Quiz> {
                 String dapand = rs.getString("DAP_AN_D");
                 int dapandung = rs.getInt("DAP_AN_DUNG");
 
-                Quiz quiz = new Quiz(id, cauhoi, dapana, dapanb, dapanc, dapand, dapandung);
+                Quiz quiz = new Quiz(id, cauhoi, dapana, dapanb, dapanc, dapand, dapandung, monhocid);
                 ketQua.add(quiz);
             }
 
