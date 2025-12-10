@@ -17,7 +17,7 @@ public class MonHocController {
 
     // hiển thị danh sách môn học
     @ResponseBody
-    @RequestMapping(value = { "/hoctap" }, method = RequestMethod.GET)
+    @RequestMapping(value = { "/monhoc" }, method = RequestMethod.GET)
     public ArrayList<MonHoc> hienThiDanhSachMonHoc(HttpServletRequest req) 
     {
         return MonHocService.getInstance().selectAll();

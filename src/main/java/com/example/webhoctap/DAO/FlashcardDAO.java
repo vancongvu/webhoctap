@@ -176,7 +176,7 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
             
             while(rs.next())
             {
-                int id = rs.getInt("ID_CAUHOI");
+                int id = rs.getInt("MONHOC_ID");
                 String mattruoc = rs.getString("MATTRUOC");
                 String matsau = rs.getString("MATSAU");
                 Flashcard flashcard = new Flashcard(id, mattruoc, matsau, monhocid);
