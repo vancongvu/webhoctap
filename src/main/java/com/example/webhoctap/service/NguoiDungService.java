@@ -8,24 +8,31 @@ public class NguoiDungService {
     public static NguoiDungService getInstance() {
         return new NguoiDungService();
     }
-
-    // Đăng ký
-    public boolean DangKy(NguoiDung user) {
-        // kiểm tra user trùng tên đăng nhập
+    //kiểm tra tên đăng nhập đã được đăng ký chưa?
+    public boolean checkDangKy(NguoiDung user)
+    {
         int id = NguoiDungDAO.getInstance().selectTenDangNhap(user.getTenDangNhap());
-        if (id != -1) {
-            return false; // user bị trùng
+        if(id != -1)
+        {
+            return false;
         }
-
-        // nếu không trùng thì thêm vào bảng NGUOIDUNG
-        NguoiDungDAO.getInstance().insert(user);
         return true;
     }
+    // Đăng ký
+    public void DangKy(NguoiDung user) 
+    {
+        // thêm người dùng vào database
+        NguoiDungDAO.getInstance().insert(user);
+    }
 
-    public NguoiDung DangNhap(String user, String pass) {
+    
+    //Đăng nhập
+    public NguoiDung DangNhap(String user, String pass) 
+    {
         NguoiDung nd = NguoiDungDAO.getInstance().selectByUserPass(user, pass);
         // kiểm tra người dùng đã đăng ký tài khoản?
-        if (nd == null) {
+        if (nd == null) 
+        {
             return null; // tài khoản không tồn tại
         }
         return nd; // trả về người dùng

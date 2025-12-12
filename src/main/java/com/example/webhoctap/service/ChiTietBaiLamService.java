@@ -21,6 +21,7 @@ public class ChiTietBaiLamService {
 
     // LƯU BÀI NGƯỜI DÙNG ĐÃ LÀM VÀO CHITIETBAILAM
     public void luuChiTietBaiLam(int id, int dapanNguoiDung) {
+        //TODO: idtongquanbailam, idcauhoi, dapannguoidung
         // tạo đối tượng CHITIETBAILAM
         ChiTietBaiLam ct = new ChiTietBaiLam();
         ct.setDapAnChon(dapanNguoiDung);

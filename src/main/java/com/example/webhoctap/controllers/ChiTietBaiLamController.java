@@ -14,7 +14,7 @@ import com.example.webhoctap.service.ChiTietBaiLamService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/chitietbailam")
+@RequestMapping("/api")
 public class ChiTietBaiLamController {
 
     /*

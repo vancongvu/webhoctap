@@ -14,11 +14,11 @@ import com.example.webhoctap.service.FlashcardService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
+@ResponseBody
 public class FlashcardController {
-
     // lay flashcard theo mon hoc
     @ResponseBody
-    @RequestMapping(value = { "/flashcard/monhoc/{id}" }, method = RequestMethod.GET)
+    @RequestMapping(value = { "/monhoc/{id}/flashcard" }, method = RequestMethod.GET)
     public ArrayList<Flashcard> hienThiFlashcardTheoMonHoc(HttpServletRequest req, @PathVariable int id) 
     {
         return FlashcardService.getInstance().selectByMonHocId(id);

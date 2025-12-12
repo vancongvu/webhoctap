@@ -114,8 +114,9 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
                 String mattruoc = rs.getString("MATTRUOC");
                 String matsau = rs.getString("MATSAU");
                 int monhocid = rs.getInt("MONHOC_ID");
+                String tenmonhoc = rs.getString("TENMONHOC");
 
-                Flashcard flashcard = new Flashcard(id, mattruoc, matsau, monhocid);
+                Flashcard flashcard = new Flashcard(id, mattruoc, matsau, monhocid, tenmonhoc);
                 ketQua.add(flashcard);
             }
 
@@ -148,8 +149,9 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
                 String mattruoc = rs.getString("MATTRUOC");
                 String matsau = rs.getString("MATSAU");
                 int monhocid = rs.getInt("MONHOC_ID");
+                String tenmonhoc = rs.getString("TENMONHOC");
 
-                ketQua = new Flashcard(id, mattruoc, matsau, monhocid);
+                ketQua = new Flashcard(id, mattruoc, matsau, monhocid, tenmonhoc);
             }
             JDBCUtil.closeConnection(c);
         }
@@ -167,7 +169,9 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
         {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "SELECT * FROM FLASHCARD WHERE MONHOC_ID = ?";
+            String sql = "SELECT * " + 
+                         "FROM FLASHCARD f JOIN MONHOC m ON f.MONHOC_ID = m.ID_MONHOC "+
+                         "WHERE MONHOC_ID = ?";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setInt(1, monhocid);
 
@@ -176,10 +180,11 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
             
             while(rs.next())
             {
-                int id = rs.getInt("ID_CAUHOI");
+                int id = rs.getInt("MONHOC_ID");
                 String mattruoc = rs.getString("MATTRUOC");
                 String matsau = rs.getString("MATSAU");
-                Flashcard flashcard = new Flashcard(id, mattruoc, matsau, monhocid);
+                String tenmonhoc = rs.getString("TENMONHOC");
+                Flashcard flashcard = new Flashcard(id, mattruoc, matsau, monhocid, tenmonhoc);
                 ketQua.add(flashcard);
             }
 
@@ -211,8 +216,9 @@ public class FlashcardDAO implements DAOInterface<Flashcard> {
                 String mattruoc = rs.getString("MATTRUOC");
                 String matsau = rs.getString("MATSAU");
                 int monhocid = rs.getInt("MONHOC_ID");
+                String tenmonhoc = rs.getString("TENMONHOC");
 
-                Flashcard flashcard = new Flashcard(id, mattruoc, matsau, monhocid);
+                Flashcard flashcard = new Flashcard(id, mattruoc, matsau, monhocid, tenmonhoc);
                 ketQua.add(flashcard);
             }
 

@@ -14,6 +14,7 @@ import com.example.webhoctap.service.TongQuanBaiLamService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
+@RequestMapping("/api")
 public class TongQuanBaiLamController {
     /*
     ví dụ:

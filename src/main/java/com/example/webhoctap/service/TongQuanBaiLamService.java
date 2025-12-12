@@ -42,5 +42,6 @@ public class TongQuanBaiLamService {
         tq.setNguoiDungId(idnguoidung);
 
         TongQuanBaiLamDAO.getInstance().insert(tq);
+        //TODO: lấy id tongquanbailam
     }
 }

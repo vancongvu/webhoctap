@@ -13,14 +13,18 @@ import com.example.webhoctap.service.QuizService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+
+
 @Controller
+@RequestMapping("/api")
 public class QuizController {
 
     // hiển thị quiz
     @ResponseBody
-    @RequestMapping(value = { "/quiz/monhoc/{id}" }, method = RequestMethod.GET)
+    @RequestMapping(value = {"/quiz/monhoc/{id}"}, method = RequestMethod.GET)
     public ArrayList<Quiz> hienThiQuizTheoMonHoc(HttpServletRequest req, @PathVariable int id) 
     {
         return QuizService.getInstance().QuizByMonHocId(id);
     }
+    
 }

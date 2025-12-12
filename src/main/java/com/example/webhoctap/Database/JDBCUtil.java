@@ -37,6 +37,7 @@ public class JDBCUtil {
             if(c != null)
             {
                 c.close();
+                System.out.println("Da ngat ket noi");
             }
         }
         catch(Exception e)

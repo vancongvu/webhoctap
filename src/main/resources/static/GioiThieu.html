@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giới Thiệu - Web Học Tập</title>
     <script src="https://kit.fontawesome.com/edc699b38d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/style.css">
     <style>
         .vechungtoi
         {
@@ -80,20 +80,20 @@
 </head>
 <body>
     <header>
-        <a href="TrangChu.html">
+        <a th:href="@{/trangchu}">
             <i class="fa-solid fa-brain"></i>
         </a>
         <nav>
             <ul>
-                <li><a th:href="@{/trangchu}">Trang Chủ</a></li>
-                <li><a th:href="@{/hoctap}">Học Tập</a></li>
-                <li><a th:href="@{/bangdiem}">Bảng Điểm</a></li>
-                <li class="active"><a th:href="@{/gioithieu}">Giới Thiệu</a></li>
+                <li><a href="/TrangChu.html">Trang Chủ</a></li>
+                <li><a href="/HocTap.html">Học Tập</a></li>
+                <li><a href="/BangDiem.html">Bảng Điểm</a></li>
+                <li class="active"><a href="/GioiThieu.html">Giới Thiệu</a></li>
             </ul>
         </nav>
         <div>
-            <a href="DangNhap-DangKy.html#dang-nhap" class="dangnhap">Đăng Nhập</a>
-            <a href="DangNhap-DangKy.html#dang-ky" class="dangky">Đăng Ký</a>
+            <a href="/DangNhap-DangKy.html#dang-nhap">Đăng Nhập</a>
+            <a href="/DangNhap-DangKy.html#dang-ky">Đăng Ký</a>
         </div>
     </header>
     <main>

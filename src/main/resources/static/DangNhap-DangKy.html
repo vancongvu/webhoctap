@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng Nhập - Web Học Tập</title>
     <script src="https://kit.fontawesome.com/edc699b38d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/style.css">
     <style>
         .dangnhap-dangky
         {
@@ -142,7 +142,7 @@
 </head>
 <body>
     <header>
-        <a href="TrangChu.html">
+        <a href="/TrangChu.html">
             <i class="fa-solid fa-brain"></i>
         </a>      
     </header>
@@ -157,32 +157,104 @@
         </div>
         <section>
             <!-- form đăng nhập -->
-            <form class="form-dang-nhap" th:action="@{/dangnhap}" method="post">
+            <form class="form-dang-nhap" id="form-dangnhap">
                 <h2 class="tieu-de">Đăng Nhập</h2>
                 <b>User</b>
-                <input type="text" name="tendangnhap" placeholder="Nhập User" required>
+                <input type="text" id="username" placeholder="Nhập User" required>
                 <b>Password</b>
-                <input type="password" name="matkhau" placeholder="Nhập Password" required>
-                <button class="button" type="submit">Đăng Nhập</button>
-                <p th:text = "${message}" style = "color: red;"></p>
+                <input type="password" id="password" placeholder="Nhập Password" required>
+                <button class="button" id="submitDN" type="submit">Đăng Nhập</button>
             </form>
     
             <!-- form đăng ký -->
-            <form class="form-dang-ky" th:action="@{/dangky}" method="post">
+            <form class="form-dang-ky" id="form-dangky">
                 <h2 class="tieu-de">Đăng Ký</h2>
                 <b>Họ Tên</b>
-                <input type="text" name="hoten" placeholder="Nhập Họ Tên" required>
+                <input type="text" id="hoten" placeholder="Nhập Họ Tên" required>
                 <b>User</b>
-                <input type="text" name="tendangnhap" placeholder="Nhập User" required>
+                <input type="text" id="tendangnhap" placeholder="Nhập User" required>
                 <b>Password</b>
-                <input type="password" name="matkhau" placeholder="Nhập Password" required>
-                <button class="button" type="submit">Đăng Ký</button>
-                <p th:text = "${message}" style = "color: red;"></p>
+                <input type="password" id="matkhau" placeholder="Nhập Password" required>
+                <button class="button" id="submitDK" type="submit">Đăng Ký</button>
             </form>
         </section>
     </main>
     <footer>
         <p>© 2025 Web Học Tập. All rights reserved.</p>
     </footer>
+
+    <script>
+        //đăng nhập
+        const submitDN = document.getElementById("submitDN");
+        submitDN.addEventListener("click", Login);
+
+        function Login(e){
+            e.preventDefault(); //chặn reload trang
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+
+            let data = new FormData();
+            data.append("tendangnhap", username);
+            data.append("matkhau", password);
+            fetch("/dangnhap", 
+            {
+                method: "POST", 
+                body: data
+            })
+            .then(response => response.json())
+            .then(result => {
+                if(!result.TrangThai)
+                {
+                    alert("Sai UserName Hoặc PassWord!");
+                }
+                else
+                {
+                    localStorage.setItem("id", result.ID);
+                    localStorage.setItem("hoten", result.HoTen);
+                    alert("Đăng Nhập Thành Công");
+                    window.location.href = "/TrangChu.html";
+                    
+                }
+            })
+            .catch(error =>{
+                alert("Lỗi kết nối server");
+            })
+        }
+
+        //đăng ký
+        const submitDK = document.getElementById("submitDK");
+        submitDK.addEventListener("click", Register);
+
+        function Register(e)
+        {
+            e.preventDefault();// chặn reload trang
+            let hoten = document.getElementById("hoten").value;
+            let tendangnhap = document.getElementById("tendangnhap").value;
+            let matkhau = document.getElementById("matkhau").value;
+
+            let data = new FormData();
+            data.append("hoten", hoten);
+            data.append("tendangnhap", tendangnhap);
+            data.append("matkhau", matkhau);
+
+            fetch("/dangky",
+            {
+                method: "POST",
+                body: data
+            })
+            .then(response => response.text())
+            .then(result => {
+                if(result === "success")
+                {
+                    alert("Đăng Ký Thành Công!");
+                    window.location.href = "/DangNhap-DangKy.html#dang-nhap";
+                }
+                else
+                {
+                    alert("Tên Đăng Nhập Đã Tồn Tại. Vui Lòng Đặt Lại!");
+                }
+            })
+        }
+    </script>
 </body>
 </html>
