@@ -457,13 +457,13 @@
                         <p class="diem">Điểm: 0</p>
                     </div>
                     <div class="cau-hoi">
-                        <h2>Thì hiện tại đơn dùng để diễn tả điều gì?</h2>
+                        <h2></h2>
                     </div>
                     <div class="cau-tra-loi">
-                        <button>Đáp án 1</button>
+                        <!-- <button>Đáp án 1</button>
                         <button>Đáp án 2</button>
                         <button>Đáp án 3</button>
-                        <button>Đáp án 4</button>
+                        <button>Đáp án 4</button> -->
                     </div>
                     <button class="cau-tiep-theo">Tiếp →</button>
                     <button class="hoan-thanh">Hoàn thành</button>
@@ -503,12 +503,13 @@
                             <p>${monhoc.MoTa}</p>
                         </a>`;
 
-                    article.addEventListener("click", laydulieu);
-
+                    article.addEventListener("click", laydulieuFlashcard);
+                    article.addEventListener("click", laydulieuQuiz);
+                        //TODO: sửa
                     list.appendChild(article);
                 });
             })
-        .catch(err => console.error(err));
+            .catch(err => console.error(err));
         });
 
         /* XỬ LÝ lật thẻ FLASHCARD */
@@ -544,7 +545,7 @@
         const socauhoi3 = document.querySelector('.socauhoi');
         const diem = document.querySelector('.diem');
         const cauhoi = document.querySelector('.cau-hoi h2');
-        const traloi = document.querySelectorAll('.cau-tra-loi button');
+        
         const buttonTT = document.querySelector('.cau-tiep-theo');
         const buttonHT = document.querySelector('.hoan-thanh');
         const diemTongKet = document.querySelector('.cau-dat');
@@ -553,9 +554,7 @@
 
         let sothutuF; // thứ tự câu hỏi
         let sothutuQ;
-        let danhSachTenMon;
         let duLieuMonF; //lấy dữ liệu câu hỏi theo môn học
-        let monHocNguoiDungChon;
         let quizFlash;
         let quizQuiz;
         let duLieuMonQ;
@@ -563,21 +562,34 @@
         let dachon;
 
         let luuDiem;
+        let monhocChon
 
-        function laydulieu()
+        function laydulieuFlashcard()
         {
-            const idMon = this.dataset.index;
+            monhocChon = this.dataset.index;
 
             //Response JSON
-            fetch(`/monhoc/${idMon}/flashcard`)
+            fetch(`/monhoc/${monhocChon}/flashcard`)
             .then(response => response.json())
             .then(result => {
                 quizFlash = result;
                 sothutuF = 0;
 
                 tenchude.textContent = this.querySelector("h2").textContent;
-
+                
                 hienthiFlashcard();
+            })
+            .catch(error => console.log(error));
+        }
+        function laydulieuQuiz()
+        {
+            fetch(`/monhoc/${monhocChon}/quiz`)
+            .then(response => response.json())
+            .then(result => {
+                quizQuiz = result;
+
+                chudequiz.textContent = this.querySelector("h2").textContent;
+                socauhoi2.textContent = `Số câu hỏi: ${quizQuiz.length}`;
             })
             .catch(error => console.log(error));
         }
@@ -642,40 +654,71 @@
         const trangND = document.querySelector('.noi-dung-cau-hoi');
         const trangTK = document.querySelector('.thong-ke');
 
-            //mặc định trang giới thiệu hiện
-            trangGT.style.display="flex";
-            trangND.style.display="none";
-            trangTK.style.display="none";
+        //mặc định trang giới thiệu hiện
+        trangGT.style.display="flex";
+        trangND.style.display="none";
+        trangTK.style.display="none";
+
         buttonbd.addEventListener('click', hienTrangND);
         function hienTrangND()
         {
-            trangGT.style.display="none";
-            trangND.style.display="flex";
-        }
+            resetQuiz();      // reset trạng thái
+            hienthiQuiz();    // hiển thị câu 1
 
+            trangGT.style.display = "none";
+            trangND.style.display = "flex";
+            trangTK.style.display = "none";
+        }
+        function resetQuiz()
+        {
+            sothutuQ = 0;
+            updateDiem = 0;
+            diem.textContent = "Điểm: 0";
+            
+            buttonTT.style.display = "flex";
+            buttonHT.style.display = "none";
+        }
         //quiz
+        // {
+        //     "CauHoi": "Kết quả của 5 + 7 là gì?",
+        //     "DapAnA": "10",
+        //     "DapAnB": "11",
+        //     "DapAnC": "12",
+        //     "DapAnD": "13",
+        //     "DapAnDung": 3,
+        //     "ID": 1,
+        //     "MonHocId": 1
+        // }
         function hienthiQuiz()
         {
             dachon = false;
 
-            //hiển thị tiêu đề
-            socauhoi2.textContent = "Số câu hỏi: " + quizQuiz.length;
-            socauhoi3.textContent = "Câu " + (sothutuQ + 1) + "/" + quizQuiz.length;
-            //hiển thị câu hỏi
-            cauhoi.textContent = quizQuiz[sothutuQ].question;
-            //hiện thị 4 đáp án
-            for(let j = 0; j < traloi.length; j++)
-            {
-                traloi[j].textContent = quizQuiz[sothutuQ].options[j];
+            const thutuQuiz = quizQuiz[sothutuQ];
 
-                traloi[j].style.background = "";
-                traloi[j].style.pointerEvents = "auto";
-                traloi[j].dataset.index = j;
-                //Chọn đáp án
-                traloi[j].addEventListener('click', kiemtra);
-                
-            }
+            const DapAn = [thutuQuiz.DapAnA, thutuQuiz.DapAnB, thutuQuiz.DapAnC, thutuQuiz.DapAnD];
+
+            const dsDapAn = document.querySelector(".cau-tra-loi");
+
+            //hiển thị tiêu đề
+            socauhoi2.textContent = `Số câu hỏi: ${quizQuiz.length}`;
+            socauhoi3.textContent = `Câu ${sothutuQ + 1}/${quizQuiz.length}`;
+
+            //hiển thị câu hỏi
+            cauhoi.textContent = thutuQuiz.CauHoi;
+
+            dsDapAn.innerHTML = "";
+
+            //hiển thị 4 đáp án và đánh dấu
+            for(let i = 1; i <= DapAn.length; i++)
+            {
+                const button = document.createElement("button");
+                button.dataset.vtchon = i;
+                button.innerHTML = DapAn[i-1];
+                button.addEventListener("click", kiemtra);
+                dsDapAn.appendChild(button);
+            } 
         }
+
         function kiemtra()
         {
             if(dachon === true) //không cho chọn lại
@@ -683,8 +726,10 @@
 
             dachon = true;
             
-            let vitriChon = parseInt(this.dataset.index);
-            let vitriDung = quizQuiz[sothutuQ].answer;
+            let vitriChon = parseInt(this.dataset.vtchon);
+            let vitriDung = quizQuiz[sothutuQ].DapAnDung;
+
+            const traloi = document.querySelectorAll('.cau-tra-loi button');
 
             if(vitriChon === vitriDung)
             {
@@ -697,7 +742,7 @@
             else
             {
                 this.style.background = "pink";
-                traloi[vitriDung].style.background = "lightgreen";
+                traloi[vitriDung-1].style.background = "lightgreen";
             }
             //ngừng nhận sự kiện
             for(let i = 0; i < traloi.length; i++)
@@ -707,21 +752,24 @@
             }
             
         }
+
         buttonTT.addEventListener('click', cautieptheo);
         function cautieptheo()
         {
-            if(sothutuQ < quizQuiz.length-1)
+            if (sothutuQ < quizQuiz.length - 1)
             {
                 sothutuQ++;
                 hienthiQuiz();
             }
-            if(sothutuQ === quizQuiz.length-1)// nếu là câu cuối cùng
-            {   
-                buttonHT.style.display = "flex";
+
+            if (sothutuQ === quizQuiz.length - 1)
+            {
                 buttonTT.style.display = "none";
-                buttonHT.addEventListener('click', thongkequiz);
-            } 
+                buttonHT.style.display = "flex";
+            }
         }
+
+        buttonHT.addEventListener('click', thongkequiz);
         function thongkequiz()
         {
             trangND.style.display = "none";
