@@ -1,15 +1,15 @@
 package com.example.webhoctap.controllers;
 
 import org.springframework.stereotype.Controller;
-//import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.webhoctap.model.NguoiDung;
 import com.example.webhoctap.model.ResponseDangNhap;
 import com.example.webhoctap.service.NguoiDungService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 //import jakarta.servlet.http.HttpServletRequest;
 
@@ -47,7 +47,8 @@ public class NguoiDungController {
     @ResponseBody
     @RequestMapping("/dangnhap")
     public ResponseDangNhap xulyDangNhap( @RequestParam("tendangnhap") String user,
-                                          @RequestParam("matkhau") String pass) 
+                                          @RequestParam("matkhau") String pass,
+                                          HttpServletRequest req) 
     {
         // kiểm tra tên đăng nhập và mật khẩu có đúng không
         NguoiDung nd = NguoiDungService.getInstance().DangNhap(user, pass);
@@ -56,6 +57,8 @@ public class NguoiDungController {
         {
             // đăng nhập thành công
             ResponseDangNhap r = new ResponseDangNhap(nd.getID(), nd.getHoTen(), true);
+            req.getSession().setAttribute("id_user", nd.getID());
+            req.getSession().setAttribute("user_name", nd.getHoTen());
             return r;
         }
         else

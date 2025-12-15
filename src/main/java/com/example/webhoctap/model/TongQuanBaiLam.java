@@ -75,7 +75,7 @@ public class TongQuanBaiLam {
     }
     public void setMonHocId(int id)
     {
-        this.id = id;
+        this.MonHocID = id;
     }
     
     public int getNguoiDungId()

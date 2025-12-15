@@ -6,20 +6,16 @@ public class TongQuanBaiLamDS {
     private int id;
     private String tenMonHoc;
     private float tongDiem;
-    private int soCauDung;
-    private int tongSoCau;
-    private Timestamp thoiGianLam;
+    private String thoiGianLam;
 
     public TongQuanBaiLamDS()
     {}
 
-    public TongQuanBaiLamDS(int id, String tenmonhoc, float tongdiem, int socaudung, int tongsocau, Timestamp thoigian)
+    public TongQuanBaiLamDS(int id, String tenmonhoc, float tongdiem, String thoigian)
     {
         this.id = id;
         this.tenMonHoc = tenmonhoc;
         this.tongDiem = tongdiem;
-        this.soCauDung = socaudung;
-        this.tongSoCau = tongsocau;
         this.thoiGianLam = thoigian;
     }
 
@@ -50,29 +46,11 @@ public class TongQuanBaiLamDS {
         this.tongDiem = diem;
     }
 
-    public int getSoCauDung()
-    {
-        return this.soCauDung;
-    }
-    public void setSoCauDung(int scd)
-    {
-        this.soCauDung = scd;
-    }
-
-    public int getTongSoCau()
-    {
-        return this.tongSoCau;
-    }
-    public void setTongSoCau(int tsc)
-    {
-        this.tongSoCau = tsc;
-    }
-
-    public Timestamp getThoiGianLam()
+    public String getThoiGianLam()
     {
         return this.thoiGianLam;
     }
-    public void setThoiGianLam(Timestamp tgl)
+    public void setThoiGianLam(String tgl)
     {
         this.thoiGianLam = tgl;
     }

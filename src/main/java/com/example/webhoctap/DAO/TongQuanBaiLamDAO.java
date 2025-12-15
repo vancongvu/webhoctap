@@ -25,15 +25,16 @@ public class TongQuanBaiLamDAO implements DAOInterface<TongQuanBaiLam> {
         {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "INSERT INTO TONGQUANBAILAM (TONGDIEM, SOCAUDUNG, TONGSOCAU, THOI_GIAN_LAM, MONHOC_ID, NGUOIDUNG_ID)" +
-                         "VALUES (?,?,?,?,?,?)";
+            String sql = "INSERT INTO TONGQUANBAILAM (TONGDIEM, SOCAUDUNG, TONGSOCAU, MONHOC_ID, NGUOIDUNG_ID) " +
+                         "VALUES (?,?,?,?,?)";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setFloat(1, t.getTongDiem());
             pst.setInt(2, t.getSoCauDung());
             pst.setInt(3, t.getTongSoCau());
-            pst.setTimestamp(4, t.getThoiGian());
-            pst.setInt(5, t.getMonHocId());
-            pst.setInt(6, t.getNguoiDungId());
+            pst.setInt(4, t.getMonHocId());
+            pst.setInt(5, t.getNguoiDungId());
+
+            System.out.println(t.getTongDiem() + ", " + t.getSoCauDung() + ", " + t.getTongSoCau() + ", " + t.getMonHocId() + ", " + t.getNguoiDungId());
 
             System.out.println("Thực thi: " + sql);
             ketQua = pst.executeUpdate();
@@ -144,12 +145,12 @@ public class TongQuanBaiLamDAO implements DAOInterface<TongQuanBaiLam> {
         {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "SELECT tq.ID_TQBL, tq.TONGDIEM, tq.SOCAUDUNG, tq.TONGSOCAU, tq.THOI_GIAN_LAM, mh.TENMONHOC " +
+            String sql = "SELECT ID_TQBL, TONGDIEM, TENMONHOC, FORMAT(THOI_GIAN_LAM, 'dd/MM/yyyy HH:mm:ss') AS THOI_GIAN_LAM " +
                          "FROM TONGQUANBAILAM tq " +
                          "JOIN MONHOC mh ON tq.MONHOC_ID = mh.ID_MONHOC " +
                          "WHERE tq.NGUOIDUNG_ID = ? " +
                          "ORDER BY tq.THOI_GIAN_LAM DESC";
-;
+                         
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setInt(1, idUser);
 
@@ -161,11 +162,9 @@ public class TongQuanBaiLamDAO implements DAOInterface<TongQuanBaiLam> {
                 int id = rs.getInt("ID_TQBL");
                 String tenmonhoc = rs.getString("TENMONHOC");
                 float tongdiem = rs.getFloat("TONGDIEM");
-                int socaudung = rs.getInt("SOCAUDUNG");
-                int tongsocau = rs.getInt("TONGSOCAU");
-                Timestamp thoigian = rs.getTimestamp("THOI_GIAN_LAM");
+                String thoigian = rs.getString("THOI_GIAN_LAM");
                 
-                TongQuanBaiLamDS tongquanbailam = new TongQuanBaiLamDS(id, tenmonhoc, tongdiem, socaudung, tongsocau, thoigian);
+                TongQuanBaiLamDS tongquanbailam = new TongQuanBaiLamDS(id, tenmonhoc, tongdiem, thoigian);
                 ketQua.add(tongquanbailam);
             }
 

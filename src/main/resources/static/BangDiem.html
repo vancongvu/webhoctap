@@ -7,41 +7,76 @@
     <script src="https://kit.fontawesome.com/edc699b38d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/style.css">
     <style>
-        section
+        main
         {
             display: flex;
             flex-direction: column;
             text-align: center;
         }
-        article
-        {
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .history {
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .history-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding:10px;
-            margin-top: 20px;
-            width: 700px;
-            border: 1px solid;
-            border-radius: 10px;
-            border-color: white;
-            background-color: white;
-        }
-        .chude, .diem
-        {
-            font-weight: bold;
-        }
-        main button
-        {
-            background-color: #d6dcff;
-            border-radius: 5px;
-            border-color: #d6dcff;
-            padding: 5px 10px;
-            text-decoration: none;
-            color: #0000ee;
-            font-weight: bold;
-            font-size: 0.9rem;
+            background-color: #fff;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+			width: 100%;
         }
 
+        .score {
+            font-size: 30px;
+            font-weight: bold;
+			min-width: 40px; 
+			text-align: center;
+			margin-right: 25px; 
+        }
+
+        .score.red { color: #e74c3c; }
+        .score.yellow { color: #f1c40f; }
+        .score.green { color: #2ecc71; }
+
+        .info {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .info .subject {
+            font-weight: bold;
+            font-size: 22px;
+        }
+
+        .info .time {
+            font-size: 18px;
+            color: #555;
+            margin-top: 3px;
+        }
+
+        .view-btn {
+            background-color: #dbe1ff;
+            border: none;
+            color: #4a4aff;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .view-btn:hover {
+            background-color: #b3c0ff;
+        }
     </style>
 </head>
 <body>
@@ -63,14 +98,17 @@
         </div>
     </header>
     <main>
-        <section>
-            <h1>Lịch Sử Làm Bài</h1>
-            <article>
-                <p id="ten-chu-de" class = "chude"></p>
-                <p id="diemso" class = "diem"></p>
-                <button>Xem Lại</button>               
-            </article>
-        </section>
+        <h1>Lịch Sử Làm Bài</h1>
+        <div class="history">
+            <!-- <div class="history-item">
+                <div class="score green">8</div>
+                <div class="info">
+                    <div class="subject">Tiếng Anh Cơ Bản</div>
+                    <div class="time">15/12/2025 12:00</div>
+                </div>
+                <button class="view-btn">Xem Lại</button>
+            </div> -->
+        </div>
     </main>
     <footer>
         <p>© 2025 Web Học Tập. All rights reserved.</p>
@@ -79,12 +117,47 @@
 </html>
 
  <script>
-    let hienThiDiem = document.getElementById('diemso');
-    const chude = document.getElementById('ten-chu-de');
+    //lấy môn học
+        document.addEventListener("DOMContentLoaded", function() 
+        {
+            fetch("/user/{idUser}/bangdiem")
+            .then(res => res.json())
+            .then(result => {
+                const list = document.querySelector(".history");
 
-    const monHienTai = localStorage.getItem('tenchudea');
-    chude.textContent = monHienTai;
-    const diemHienTai = localStorage.getItem('diemluu');
-    const tongSoCau = localStorage.getItem('tongsocau');
-    hienThiDiem.textContent = "Điểm: " + diemHienTai + "/" + tongSoCau;
+                result.forEach(ll => {
+                    const div = document.createElement("div");
+                    div.classList.add("history-item");
+
+                    div.innerHTML = `
+                        <div class="score">${ll.tongDiem}</div>
+                        <div class="info">
+                            <div class="subject">${ll.tenMonHoc}</div>
+                            <div class="time">${ll.thoiGianLam}</div>
+                        </div>
+                        <button class="view-btn">Xem Lại</button>
+                    `;
+
+                    // gán màu cho điểm
+                    const scoreDiv = div.querySelector(".score");
+                    const score = parseFloat(ll.tongDiem);
+
+                    if(score < 3.5) 
+                    {
+                        scoreDiv.classList.add("red");
+                    } 
+                    else if(score >= 3.6 && score <= 6.9) 
+                    {
+                        scoreDiv.classList.add("yellow");
+                    } 
+                    else if(score >= 7) 
+                    {
+                        scoreDiv.classList.add("green");
+                    }
+
+                    list.appendChild(div);
+                });
+            })
+            .catch(err => console.error(err));
+        });
 </script>

@@ -568,7 +568,7 @@
         {
             monhocChon = this.dataset.index;
 
-            //Response JSON
+            //lấy flashcard
             fetch(`/monhoc/${monhocChon}/flashcard`)
             .then(response => response.json())
             .then(result => {
@@ -583,6 +583,7 @@
         }
         function laydulieuQuiz()
         {
+            //lấy quiz
             fetch(`/monhoc/${monhocChon}/quiz`)
             .then(response => response.json())
             .then(result => {
@@ -601,8 +602,6 @@
             //hiển thị câu hỏi
             mattruoc.textContent = quizFlash[sothutuF].MatTruoc;
             matsau.textContent = quizFlash[sothutuF].MatSau;
-            //tổng số câu hỏi
-            //let tongcauhoi = quizFlash.length;
             socauhoi.textContent = `Thẻ ${sothutuF + 1}/${quizFlash.length}`;
             trangThaiButton(); 
         }
@@ -662,8 +661,8 @@
         buttonbd.addEventListener('click', hienTrangND);
         function hienTrangND()
         {
-            resetQuiz();      // reset trạng thái
-            hienthiQuiz();    // hiển thị câu 1
+            resetQuiz();      
+            hienthiQuiz(); 
 
             trangGT.style.display = "none";
             trangND.style.display = "flex";
@@ -775,15 +774,32 @@
             trangND.style.display = "none";
             trangTK.style.display = "flex";
             diemTongKet.textContent = updateDiem + "/" + quizQuiz.length;
-            trove.addEventListener('click', trovechude);
-            let luuChuDe = localStorage.getItem('tenchudea');
-            localStorage.setItem('tenchudea', tenchude.textContent);
-            localStorage.setItem('tongsocau', quizQuiz.length);
-        } 
+
+            //LƯU BÀI LÀM VỀ DATABASE
+            const formData = new FormData();
+            formData.append("socaudung", updateDiem);
+            formData.append("tongsocau", quizQuiz.length);
+            formData.append("idmonhoc", monhocChon);
+
+            fetch("/luubai", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.text())
+            .then(result => {
+                console.log("Lưu bài làm:", result);
+            })
+            .catch(err => {
+                console.error("Lỗi lưu bài làm:", err);
+            });
+        }
+
+        trove.addEventListener('click', trovechude);
         function trovechude()
         {
             trangTK.style.display = "none";
             trangGT.style.display = "flex";
+            trangND.style.display = "none";
         }
         quaylai.addEventListener('click', anHetTrangQuiz);
         function anHetTrangQuiz()
