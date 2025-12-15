@@ -1,26 +1,24 @@
 package com.example.webhoctap.model;
 
-public class ChiTietBaiLamDS {
+public class ResponseChiTietBaiLam {
     private int id;
     private String cauhoi;
     private int dapanchon;
     private int dapandung;
-    private int idquiz;
     private String dap_an_a;
     private String dap_an_b;
     private String dap_an_c;
     private String dap_an_d;
 
-    public ChiTietBaiLamDS() {
+    public ResponseChiTietBaiLam() {
     }
 
-    public ChiTietBaiLamDS(int id, String cauhoi, int dapanchon, int dapandung, int idquiz, 
+    public ResponseChiTietBaiLam(int id, String cauhoi, int dapanchon, int dapandung, 
                                   String dap_an_a, String dap_an_b, String dap_an_c, String dap_an_d) {
         this.id = id;
         this.cauhoi = cauhoi;
         this.dapanchon = dapanchon;
         this.dapandung = dapandung;
-        this.idquiz = idquiz;
         this.dap_an_a = dap_an_a;
         this.dap_an_b = dap_an_b;
         this.dap_an_c = dap_an_c;
@@ -57,14 +55,6 @@ public class ChiTietBaiLamDS {
 
     public void setDapandung(int dapandung) {
         this.dapandung = dapandung;
-    }
-
-    public int getIdquiz() {
-        return idquiz;
-    }
-
-    public void setIdquiz(int idquiz) {
-        this.idquiz = idquiz;
     }
 
     public String getDap_an_a() {

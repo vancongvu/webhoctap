@@ -3,7 +3,6 @@ package com.example.webhoctap.controllers;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,7 +41,7 @@ public class TongQuanBaiLamController {
     //lưu bài làm khi hoàn thành
     @ResponseBody
     @RequestMapping(value = {"/luubai"}, method=RequestMethod.POST)
-    public boolean luuTongQuanBaiLam(@RequestParam("socaudung") int soCauDung,
+    public int luuTongQuanBaiLam(@RequestParam("socaudung") int soCauDung,
                                     @RequestParam("tongsocau") int tongSoCau,
                                     @RequestParam("idmonhoc") int idMonHoc,
                                     HttpServletRequest req)

@@ -1,6 +1,5 @@
 package com.example.webhoctap.model;
 
-import java.sql.Timestamp;
 
 public class TongQuanBaiLamDS {
     private int id;

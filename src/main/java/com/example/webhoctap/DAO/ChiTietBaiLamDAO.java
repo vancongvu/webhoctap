@@ -8,7 +8,8 @@ import java.util.ArrayList;
 
 import com.example.webhoctap.Database.JDBCUtil;
 import com.example.webhoctap.model.ChiTietBaiLam;
-import com.example.webhoctap.model.ChiTietBaiLamDS;
+import com.example.webhoctap.model.RequestChiTietBaiLam;
+import com.example.webhoctap.model.ResponseChiTietBaiLam;
 
 public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
 
@@ -16,7 +17,12 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
         return new ChiTietBaiLamDAO();
     }
 
-    public int insert(ChiTietBaiLam t) {
+    public int insert(ChiTietBaiLam t)
+    {
+        return 0;
+    }
+
+    public int insert(RequestChiTietBaiLam t) {
         int ketQua = 0;
         try {
             Connection c = JDBCUtil.getConnection();
@@ -26,18 +32,20 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
 
             // TODO: doi ten cot tu TONGQUANBL_ID thanh ID_TQBL (vcv)
 
-            String sql = "INSERT INTO CHITIETBAILAM (CAUHOI_ID, DAP_AN_CHON, ID_TQBL) " +
+            String sql = "INSERT INTO CHITIETBAILAM (DAP_AN_CHON, TQBL_ID, CAUHOI_ID) " +
                     "VALUES (?,?,?)";
             PreparedStatement pst = c.prepareStatement(sql);
-            pst.setInt(1, t.getIDQuiz());
-            pst.setInt(2, t.getDapAnChon());
-            pst.setInt(3, t.getIDTQBL());
+            pst.setInt(1, t.getDapAnChon());
+            pst.setInt(2, t.getTQBLID());
+            pst.setInt(3, t.getQuizID());
 
             System.out.println("Thực thi: " + sql);
             ketQua = pst.executeUpdate();
 
             JDBCUtil.closeConnection(c);
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) 
+        {
             e.printStackTrace();
         }
         return ketQua;
@@ -168,33 +176,32 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
         return ketQua;
     }
 
-    public ArrayList<ChiTietBaiLamDS> selectByTongQuanBaiLamId(int tqblid) {
-        ArrayList<ChiTietBaiLamDS> ketQua = new ArrayList<ChiTietBaiLamDS>();
+    public ArrayList<ResponseChiTietBaiLam> selectByTongQuanBaiLamId(int tqblid) {
+        ArrayList<ResponseChiTietBaiLam> ketQua = new ArrayList<ResponseChiTietBaiLam>();
         try {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "SELECT CTBL.*, CH.* " +
+            String sql = "SELECT CTBL.DAP_AN_CHON, CH.CAUHOI, CH.DAP_AN_A, CH.DAP_AN_B, CH.DAP_AN_C, CH.DAP_AN_D, CH.DAP_AN_DUNG " +
                     "FROM CHITIETBAILAM CTBL " +
                     "JOIN CAUHOI CH ON CTBL.CAUHOI_ID = CH.ID_CAUHOI " +
-                    "WHERE CTBL.IDTQBL = ?";
+                    "WHERE CTBL.TQBL_ID = ?";
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setInt(1, tqblid);
 
-            System.out.println("Thực thi: " + sql);
+            System.out.println("Thực thi: " + sql + tqblid);
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                int id = rs.getInt("ID_BAILAMCT");
                 int dapanchon = rs.getInt("DAP_AN_CHON");
-                int idquiz = rs.getInt("CAUHOI_ID");
                 String cauHoi = rs.getString("CAUHOI");
-                int dapAnDung = rs.getInt("DAP_AN_DUNG");
                 String dapAnA = rs.getString("DAP_AN_A");
                 String dapAnB = rs.getString("DAP_AN_B");
                 String dapAnC = rs.getString("DAP_AN_C");
                 String dapAnD = rs.getString("DAP_AN_D");
+                int dapAnDung = rs.getInt("DAP_AN_DUNG");
+                
 
-                ChiTietBaiLamDS chitietbailam = new ChiTietBaiLamDS(id, cauHoi, dapanchon, dapAnDung, idquiz, dapAnA, dapAnB, dapAnC, dapAnD);
+                ResponseChiTietBaiLam chitietbailam = new ResponseChiTietBaiLam(0, cauHoi, dapanchon, dapAnDung, dapAnA, dapAnB, dapAnC, dapAnD);
                 ketQua.add(chitietbailam);
             }
 

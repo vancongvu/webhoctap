@@ -27,13 +27,13 @@ public class TongQuanBaiLamService {
     } 
 
     //thêm TONGQUANBAILAM
-    public boolean luuTongQuanBaiLam(TongQuanBaiLam tqbl)
+    public int luuTongQuanBaiLam(TongQuanBaiLam tqbl)
     {
-        int ketQua = TongQuanBaiLamDAO.getInstance().insert(tqbl);
-        if(ketQua != 0)
+        int idtqbl = TongQuanBaiLamDAO.getInstance().insert(tqbl);
+        if(idtqbl != 0)
         {
-            return true;
+            return idtqbl;
         }
-        return false;
+        return 0;
     }
 }

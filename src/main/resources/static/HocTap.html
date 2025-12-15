@@ -658,6 +658,9 @@
         trangND.style.display="none";
         trangTK.style.display="none";
 
+        //mảng lưu đáp án người dùng chọn
+        let danhSachDapAn = []; 
+
         buttonbd.addEventListener('click', hienTrangND);
         function hienTrangND()
         {
@@ -728,6 +731,9 @@
             let vitriChon = parseInt(this.dataset.vtchon);
             let vitriDung = quizQuiz[sothutuQ].DapAnDung;
 
+            //lưu đáp án người dùng chọn
+            danhSachDapAn[sothutuQ] = vitriChon;
+
             const traloi = document.querySelectorAll('.cau-tra-loi button');
 
             if(vitriChon === vitriDung)
@@ -748,8 +754,7 @@
             {
                 traloi[i].style.pointerEvents = "none";
                 traloi[i].style.cursor = "default";
-            }
-            
+            }          
         }
 
         buttonTT.addEventListener('click', cautieptheo);
@@ -787,11 +792,38 @@
             })
             .then(res => res.text())
             .then(result => {
-                console.log("Lưu bài làm:", result);
+                idTQBL = result;
+                console.log("Lưu id tqbl:", result);
+                //lưu chi tiết bài làm
+                luuChiTietBaiLam(idTQBL);
             })
             .catch(err => {
                 console.error("Lỗi lưu bài làm:", err);
             });
+        }
+
+        function luuChiTietBaiLam(idTQBL)
+        {
+            for(let i=0; i < quizQuiz.length; i++)
+            {
+                const idCauHoi = quizQuiz[i].ID;
+
+                const form = new FormData();
+                form.append("idtqbl", idTQBL);
+                form.append("idcauhoi", idCauHoi);
+                form.append("dapanchon", danhSachDapAn[i]);
+
+                console.log(
+                    "Câu hỏi ID:", idCauHoi,
+                    "Đáp án chọn:", danhSachDapAn[i]
+                );
+
+
+                fetch("/luuchitiet", {
+                    method: "POST",
+                    body: form
+                });
+            }
         }
 
         trove.addEventListener('click', trovechude);

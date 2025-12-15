@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -20,14 +21,14 @@ public class TongQuanBaiLamDAO implements DAOInterface<TongQuanBaiLam> {
     
     public int insert (TongQuanBaiLam t)
     {
-        int ketQua = 0;
+        int idTQBL = 0;
         try
         {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "INSERT INTO TONGQUANBAILAM (TONGDIEM, SOCAUDUNG, TONGSOCAU, MONHOC_ID, NGUOIDUNG_ID) " +
                          "VALUES (?,?,?,?,?)";
-            PreparedStatement pst = c.prepareStatement(sql);
+            PreparedStatement pst = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pst.setFloat(1, t.getTongDiem());
             pst.setInt(2, t.getSoCauDung());
             pst.setInt(3, t.getTongSoCau());
@@ -37,7 +38,14 @@ public class TongQuanBaiLamDAO implements DAOInterface<TongQuanBaiLam> {
             System.out.println(t.getTongDiem() + ", " + t.getSoCauDung() + ", " + t.getTongSoCau() + ", " + t.getMonHocId() + ", " + t.getNguoiDungId());
 
             System.out.println("Thực thi: " + sql);
-            ketQua = pst.executeUpdate();
+            pst.executeUpdate();
+
+            // lấy ID vừa tạo trong csdl
+            ResultSet rs = pst.getGeneratedKeys();
+            if(rs.next()) 
+            {
+                idTQBL = rs.getInt(1); // cột đầu tiên là ID_TQBL
+            }
 
             JDBCUtil.closeConnection(c);
         }
@@ -45,7 +53,7 @@ public class TongQuanBaiLamDAO implements DAOInterface<TongQuanBaiLam> {
         {
             e.printStackTrace();
         }
-        return ketQua;
+        return idTQBL;
     }
 
     public int update (TongQuanBaiLam t)
