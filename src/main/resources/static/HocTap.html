@@ -676,6 +676,7 @@
             sothutuQ = 0;
             updateDiem = 0;
             diem.textContent = "Điểm: 0";
+            danhSachDapAn = new Array(quizQuiz.length).fill(0);
             
             buttonTT.style.display = "flex";
             buttonHT.style.display = "none";
@@ -760,6 +761,11 @@
         buttonTT.addEventListener('click', cautieptheo);
         function cautieptheo()
         {
+            if (danhSachDapAn[sothutuQ] === 0) 
+            {
+                alert("Vui lòng chọn đáp án trước khi tiếp tục");
+                return;
+            }
             if (sothutuQ < quizQuiz.length - 1)
             {
                 sothutuQ++;

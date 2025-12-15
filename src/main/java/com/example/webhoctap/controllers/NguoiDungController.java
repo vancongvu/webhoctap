@@ -69,11 +69,10 @@ public class NguoiDungController {
         }
     }
 
-    // xử lý đăng xuất
-    // @RequestMapping("/dangxuat")
-    // public String xulyDangXuat(HttpServletRequest req) 
-    // {
-    //     req.getSession().invalidate(); // xoá toàn bộ session
-    //     return "";
-    // }
+    //xử lý đăng xuất
+    @RequestMapping("/dangxuat")
+    public void xulyDangXuat(HttpServletRequest req) 
+    {
+        req.getSession().invalidate(); // xoá toàn bộ session
+    }
 }

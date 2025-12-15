@@ -117,26 +117,7 @@
     
 
     <script>
-        window.addEventListener("DOMContentLoaded", () => {
-        const hoten = localStorage.getItem("hoten"); 
-        const userMenu = document.getElementById("usermenu");
-
-        if (hoten) {
-            userMenu.innerHTML = `
-                <h3>Xin chào, ${hoten}!</h3>
-                <a href="#" id="logout-link">Đăng Xuất</a>
-            `;
-
-        // Bắt sự kiện logout
-        document.getElementById("logout-link").addEventListener("click", (e) => {
-            e.preventDefault();
-            localStorage.removeItem("hoten");
-            localStorage.removeItem("id");
-            location.reload(); // reload để hiển thị lại menu chưa đăng nhập
-        });
-    }
-});
-
+        
     </script>
 </body>
 </html>

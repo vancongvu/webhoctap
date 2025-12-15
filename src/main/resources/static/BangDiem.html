@@ -13,18 +13,21 @@
             flex-direction: column;
             text-align: center;
         }
-        h1 {
+        h1 
+        {
             text-align: center;
             margin-bottom: 20px;
         }
 
-        .history {
+        .history 
+        {
             max-width: 700px;
             width: 100%;
             margin: 0 auto;
         }
 
-        .history-item {
+        .history-item 
+        {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -36,7 +39,8 @@
 			width: 100%;
         }
 
-        .score {
+        .score 
+        {
             font-size: 30px;
             font-weight: bold;
 			min-width: 40px; 
@@ -44,27 +48,40 @@
 			margin-right: 25px; 
         }
 
-        .score.red { color: #e74c3c; }
-        .score.yellow { color: #f1c40f; }
-        .score.green { color: #2ecc71; }
+        .score.red 
+        { 
+            color: #e74c3c; 
+        }
+        .score.yellow 
+        { 
+            color: #f1c40f; 
+        }
+        .score.green 
+        { 
+            color: #2ecc71; 
+        }
 
-        .info {
+        .info 
+        {
             flex: 1;
             margin-left: 15px;
         }
 
-        .info .subject {
+        .info .subject 
+        {
             font-weight: bold;
             font-size: 22px;
         }
 
-        .info .time {
+        .info .time 
+        {
             font-size: 18px;
             color: #555;
             margin-top: 3px;
         }
 
-        .view-btn {
+        .view-btn 
+        {
             background-color: #dbe1ff;
             border: none;
             color: #4a4aff;
@@ -74,8 +91,79 @@
             font-weight: bold;
         }
 
-        .view-btn:hover {
+        .view-btn:hover 
+        {
             background-color: #b3c0ff;
+        }
+
+        .modal 
+        {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content 
+        {
+            background: #fff;
+            width: 70%;
+            max-width: 800px;
+            max-height: 75vh; 
+            display: flex;
+            flex-direction: column;
+            margin: 50px auto;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .modal-content h2 
+        {
+            margin: 0px;
+            font-size: 22px;
+        }
+
+        .close 
+        {
+            align-self: flex-end;
+            font-size: 26px;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+
+        .answer 
+        {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .answer.correct 
+        {
+            background-color: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .answer.wrong 
+        {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        #xem-lai-bai-lam 
+        {
+            margin-top: 15px;
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 10px;
         }
     </style>
 </head>
@@ -100,14 +188,13 @@
     <main>
         <h1>Lịch Sử Làm Bài</h1>
         <div class="history">
-            <!-- <div class="history-item">
-                <div class="score green">8</div>
-                <div class="info">
-                    <div class="subject">Tiếng Anh Cơ Bản</div>
-                    <div class="time">15/12/2025 12:00</div>
-                </div>
-                <button class="view-btn">Xem Lại</button>
-            </div> -->
+        </div>
+        <div id="reviewModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Xem Lại Bài Làm</h2>
+                <div id="xem-lai-bai-lam"></div>
+            </div>
         </div>
     </main>
     <footer>
@@ -155,9 +242,75 @@
                         scoreDiv.classList.add("green");
                     }
 
+                    const btn = div.querySelector(".view-btn");
+
+                    btn.addEventListener("click", () => {
+                        fetch(`/tongquanbailam/${ll.ID}/chitietbailam`)
+                            .then(res => res.json())
+                            .then(data => {
+                                xemLaiBaiLam(data);
+                                document.getElementById("reviewModal").style.display = "block";
+                            })
+                            .catch(err => console.error(err));
+                    });
+
                     list.appendChild(div);
                 });
             })
             .catch(err => console.error(err));
         });
+		
+		function xemLaiBaiLam(data) {
+			const container = document.getElementById("xem-lai-bai-lam");
+			container.innerHTML = "";
+
+			data.forEach((item, index) => {
+
+				const cauHoiDiv = document.createElement("div");
+				cauHoiDiv.innerHTML = `<h4>${index + 1}. ${item.cauhoi}</h4>`;
+
+				const dapAn = [
+					item.dap_an_a,
+					item.dap_an_b,
+					item.dap_an_c,
+					item.dap_an_d
+				];
+
+				dapAn.forEach((text, i) => {
+					const stt = i + 1;
+					const div = document.createElement("div");
+					div.classList.add("answer");
+					div.innerText = text;
+
+					// chọn đúng
+					if (stt === item.dapandung && stt === item.dapanchon) {
+						div.classList.add("correct");
+					}
+
+					// chọn sai
+					if (stt === item.dapanchon && item.dapanchon !== item.dapandung) {
+						div.classList.add("wrong");
+					}
+
+					// đáp án đúng
+					if (stt === item.dapandung && item.dapanchon !== item.dapandung) {
+						div.classList.add("correct");
+					}
+
+					cauHoiDiv.appendChild(div);
+				});
+
+				container.appendChild(cauHoiDiv);
+			});
+		}
+
+		document.querySelector(".close").onclick = () => {
+		document.getElementById("reviewModal").style.display = "none";
+		};
+
+		window.onclick = (e) => {
+			if (e.target.id === "reviewModal") {
+				document.getElementById("reviewModal").style.display = "none";
+			}
+		};
 </script>
