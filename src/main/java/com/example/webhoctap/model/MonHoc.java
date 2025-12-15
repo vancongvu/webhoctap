@@ -4,18 +4,21 @@ public class MonHoc {
     private int id;
     private String TenMonHoc;
     private String MoTa;
+    private String HinhAnh;
 
     public MonHoc()
     {
         this.id = 0;
         this.TenMonHoc = "";
         this.MoTa = "";
+        this.HinhAnh = "";
     }
-    public MonHoc(int id, String TenMonHoc, String MoTa)
+    public MonHoc(int id, String TenMonHoc, String MoTa, String HinhAnh)
     {
         this.id = id;
         this.TenMonHoc = TenMonHoc;
         this.MoTa = MoTa;
+        this.HinhAnh = HinhAnh;
     }
 
     public int getID()
@@ -43,5 +46,14 @@ public class MonHoc {
     public void setMoTa(String mota)
     {
         this.MoTa = mota;
+    }
+
+    public String getHinhAnh()
+    {
+        return this.HinhAnh;
+    }
+    public void setHinhAnh(String hinhanh)
+    {
+        this.HinhAnh = hinhanh;
     }
 }

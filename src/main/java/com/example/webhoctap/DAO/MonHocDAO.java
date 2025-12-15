@@ -23,12 +23,13 @@ public class MonHocDAO implements DAOInterface<MonHoc> {
         {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "INSERT INTO MONHOC (TENMONHOC, MOTA)" +
-                         "VALUES (?,?)";
+            String sql = "INSERT INTO MONHOC (TENMONHOC, MOTA, HINHANH)" +
+                         "VALUES (?,?,?)";
             
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setString(1, t.getTenMonHoc());
             pst.setString(2, t.getMoTa());
+            pst.setString(3, t.getHinhAnh());
             
             System.out.println("Thực thi: " + sql);
             ketQua = pst.executeUpdate();
@@ -49,14 +50,15 @@ public class MonHocDAO implements DAOInterface<MonHoc> {
         {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "UPDATE MONHOC" +
-                         "SET TENMONHOC = ? , MOTA = ? " +
+            String sql = "UPDATE MONHOC " +
+                         "SET TENMONHOC = ? , MOTA = ? , HINHANH = ?" +
                          "WHERE ID_MONHOC = ?";
 
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setString(1, t.getTenMonHoc());
             pst.setString(2, t.getMoTa());
-            pst.setInt(3, t.getID());
+            pst.setString(3, t.getHinhAnh());
+            pst.setInt(4, t.getID());
 
             System.out.println("Thực thi: " + sql);
             ketQua = pst.executeUpdate();
@@ -111,8 +113,9 @@ public class MonHocDAO implements DAOInterface<MonHoc> {
                 int id = rs.getInt("ID_MONHOC");
                 String tenmonhoc = rs.getString("TENMONHOC");
                 String mota = rs.getString("MOTA");
+                String hinhanh = rs.getString("HINHANH");
 
-                MonHoc monhoc = new MonHoc(id, tenmonhoc, mota);
+                MonHoc monhoc = new MonHoc(id, tenmonhoc, mota, hinhanh);
                 ketQua.add(monhoc);
             }
 
@@ -144,8 +147,9 @@ public class MonHocDAO implements DAOInterface<MonHoc> {
                 int id = rs.getInt("ID_MONHOC");
                 String tenmonhoc = rs.getString("TENMONHOC");
                 String mota = rs.getString("MOTA");
+                String hinhanh = rs.getString("HINHANH");
 
-                ketQua = new MonHoc(id, tenmonhoc, mota);
+                ketQua = new MonHoc(id, tenmonhoc, mota, hinhanh);
             }
             JDBCUtil.closeConnection(c);
         }
@@ -174,8 +178,9 @@ public class MonHocDAO implements DAOInterface<MonHoc> {
                 int id = rs.getInt("ID_MONHOC");
                 String tenmonhoc = rs.getString("TENMONHOC");
                 String mota = rs.getString("MOTA");
+                String hinhanh = rs.getString("HINHANH");
 
-                MonHoc monhoc = new MonHoc(id, tenmonhoc, mota);
+                MonHoc monhoc = new MonHoc(id, tenmonhoc, mota, hinhanh);
                 ketQua.add(monhoc);
             }
 
