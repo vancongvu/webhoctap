@@ -1,7 +1,7 @@
 @font-face 
  {
     font-family: 'be vietnam pro';
-    src: url('../font/BeVietnamPro-Regular.ttf') format('truetype');
+    src: url('./font/BeVietnamPro-Regular.ttf') format('truetype');
     font-weight: normal;
 }
 

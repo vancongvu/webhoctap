@@ -10,6 +10,7 @@ import com.example.webhoctap.model.ResponseDangNhap;
 import com.example.webhoctap.service.NguoiDungService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 //import jakarta.servlet.http.HttpServletRequest;
 
@@ -69,10 +70,40 @@ public class NguoiDungController {
         }
     }
 
+    //thông tin sau khi người dùng đăng nhập
+    @ResponseBody
+    @RequestMapping("/hoso")
+    public ResponseDangNhap getUserInfo(HttpServletRequest request) 
+    {
+        HttpSession session = request.getSession(false);
+
+        if (session == null) 
+        {
+            return new ResponseDangNhap(0, null, false);
+        }
+
+        Integer userId = (Integer) session.getAttribute("id_user");
+        String userName = (String) session.getAttribute("user_name");
+
+        if (userId == null) 
+        {
+            return new ResponseDangNhap(0, null, false);
+        }
+
+        return new ResponseDangNhap(userId, userName, true);
+    }    
+
     //xử lý đăng xuất
     @RequestMapping("/dangxuat")
-    public void xulyDangXuat(HttpServletRequest req) 
+    public String dangXuat(HttpServletRequest request) 
     {
-        req.getSession().invalidate(); // xoá toàn bộ session
+        HttpSession session = request.getSession(false);
+
+        if (session != null) 
+        {
+            session.invalidate();
+        }
+
+        return "OK";
     }
 }

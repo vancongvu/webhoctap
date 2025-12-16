@@ -7,7 +7,8 @@
     <script src="https://kit.fontawesome.com/edc699b38d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/style.css">
     <style>
-        main .home {
+        main .home 
+        {
             display: flex;
             flex-direction: column;
             text-align: center;
@@ -17,12 +18,14 @@
             padding: 40px;
         }
 
-        main .chaomung {
+        main .chaomung 
+        {
 			margin: 0;
             font-size: 3rem;
         }
     
-        main .webht {
+        main .webht 
+        {
             color: #4F46E5;
             font-size: 3rem;
 			margin: 20px 0 0 0;
@@ -33,11 +36,13 @@
 			margin: 50px 0;
         }
 
-        main .home p {
+        main .home p 
+        {
             font-size: 26;
         }
 
-        main .home a {
+        main .home a 
+        {
             background-color: #4F46E5;
             color: white;
             text-decoration: none;
@@ -49,14 +54,16 @@
             margin-top: 0px;
         }
         
-        main .home .tinhnang {
+        main .home .tinhnang 
+        {
             display: flex;
             justify-content: space-evenly;
             gap: 40px;
             margin-top: 30px;
         }
 
-        main .home .tinhnang article {
+        main .home .tinhnang article 
+        {
             text-align: left;
             padding: 20px;
             border-width: 1px;
@@ -65,24 +72,54 @@
             border-radius: 10px;
             width: 250px;
         }
+
+        .hidden 
+        {
+            display: none;
+        }
+
+        .ho-so 
+        {
+            #dang-xuat i.fa-right-from-bracket:hover 
+            {
+                color: #4F46E5;
+                cursor: pointer;
+            }
+
+            span 
+            {
+                font-size: 20px;
+                font-weight: bold;
+                color: #4F46E5;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
-        <a th:href="@{/trangchu}">
+        <a href="/TrangChu.html">
             <i class="fa-solid fa-brain"></i>
         </a>
         <nav>
             <ul>
                 <li class="active"><a href="/TrangChu.html">Trang Chủ</a></li>
-                <li><a href="/HocTap.html">Học Tập</a></li>
+                <li><a href="/HocTap.html" id="hoctap">Học Tập</a></li>
                 <li><a href="/BangDiem.html">Bảng Điểm</a></li>
                 <li><a href="/GioiThieu.html">Giới Thiệu</a></li>
             </ul>
         </nav>
-        <div id = "usermenu">
-            <a href="/DangNhap-DangKy.html#dang-nhap">Đăng Nhập</a>
-            <a href="/DangNhap-DangKy.html#dang-ky">Đăng Ký</a>
+        <div id="usermenu">
+            <div class="ho-so hidden">
+                <span id="ten-ng-dung"></span>
+                <a id="dang-xuat" title="Đăng Xuất">
+                    <i class="fa-solid fa-right-from-bracket" style="font-size: 30px;"></i>
+                </a>
+            </div>
+        
+            <div id="nut-nhan">
+                <a href="/DangNhap-DangKy.html#dang-nhap">Đăng Nhập</a>
+                <a href="/DangNhap-DangKy.html#dang-ky">Đăng Ký</a>
+            </div>
         </div>
     </header>
     <main>
@@ -91,20 +128,20 @@
             <h1 class="webht"><strong>Web Học Tập Quiz và FlashCard</strong></h1>
             <p class="mota">Trải nghiệm phương pháp học tập tương tác với Flashcard và Quiz,<br>
                 được hỗ trợ bởi AI để giải đáp mọi thắc mắc và theo dõi tiến độ của bạn.</p>
-            <a href="/hoctap">Bắt Đầu Học Ngay!</a>
+            <a href="/HocTap.html" id="hoctap1">Bắt Đầu Học Ngay!</a>
             <section class="tinhnang">
                 <article>
-                    <img src="../img/layers.png" alt="layers" width="40" height="40">
+                    <img src="https://i.postimg.cc/fRR7YnrP/flashcard.png" alt="layers" width="40" height="40">
                     <h2>Học với Flashcard</h2>
                     <p>Ghi nhớ kiến thức hiệu quả với hệ thống Flashcard thông minh, lặp lại ngắt quãng.</p>
                 </article>
                 <article>
-                    <img src="../img/cham-hoi.png" alt="dau-cham-hoi" width="40" height="40">
+                    <img src="https://i.postimg.cc/jLBJr9KQ/quiz.png" alt="dau-cham-hoi" width="40" height="40">
                     <h2>Kiểm tra với Quiz</h2>
                     <p>Đánh giá kiến thức qua các bài Quiz đa dạng, từ dễ đến khó, giúp bạn tiến bộ nhanh chóng.</p>
                 </article>
                 <article>
-                    <img src="../img/robot.png" alt="robot" width="40" height="40">
+                    <img src="https://i.postimg.cc/QHvWrPsJ/robot.png" alt="robot" width="40" height="40">
                     <h2>Trợ Lý Học Tập AI</h2>
                     <p>Không còn bế tắc! Hỏi đáp trực tiếp với AI để hiểu sâu mọi vấn đề.</p>
                 </article>
@@ -117,7 +154,67 @@
     
 
     <script>
-        
+        //Xử lý vùng đăng nhập/đăng ký - lời chào user/đăng xuất
+        document.getElementById('dang-xuat').addEventListener('click', DangXuat);
+        function showUserMenu(userName) 
+        {
+            document.querySelector(".ho-so").classList.remove("hidden");
+            document.getElementById("nut-nhan").classList.add("hidden");
+            document.getElementById('ten-ng-dung').textContent = `Xin chào, ${userName}`;
+        }
+
+        function showLoginMenu() 
+        {
+            document.querySelector(".ho-so").classList.add("hidden");
+            document.getElementById("nut-nhan").classList.remove("hidden");
+            document.getElementById("ten-ng-dung").textContent = "";
+        }
+
+        //lưu trạng thái đăng nhập
+        let dn = false;
+
+        function DangXuat() 
+        {
+            fetch('/dangxuat', {
+                method: 'POST',
+                credentials: 'include'
+            })
+            .then(() => {
+                window.location.href = "/DangNhap-DangKy.html#dang-nhap";
+            });
+        }
+
+        fetch('/hoso', {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(data => {
+            var userId = data.id;
+            var userName = data.HoTen
+            var trangThai = data.TrangThai
+
+            // Kiểm tra trạng thái ng dùng
+            if (trangThai) 
+            {
+                dn = true;
+                showUserMenu(userName);
+            }
+        })
+
+        //chặn truy cập vào trang học tập khi chưa đăng nhập
+        document.getElementById("hoctap").addEventListener('click', kiemtra);
+        document.getElementById("hoctap1").addEventListener('click', kiemtra);
+        function kiemtra(e)
+        {
+            if (!dn) 
+            {
+                e.preventDefault();
+                alert("Bạn cần đăng nhập để học");
+                window.location.href = "/DangNhap-DangKy.html#dang-nhap";
+            }
+        }
+
     </script>
 </body>
 </html>

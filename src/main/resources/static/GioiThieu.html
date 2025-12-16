@@ -76,24 +76,54 @@
             margin: 10px;
             cursor: pointer;
         }
+
+        .hidden 
+        {
+            display: none;
+        }
+
+        .ho-so 
+        {
+            #dang-xuat i.fa-right-from-bracket:hover 
+            {
+                color: #4F46E5;
+                cursor: pointer;
+            }
+
+            span 
+            {
+                font-size: 20px;
+                font-weight: bold;
+                color: #4F46E5;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
-        <a th:href="@{/trangchu}">
+        <a href="/TrangChu.html">
             <i class="fa-solid fa-brain"></i>
         </a>
         <nav>
             <ul>
                 <li><a href="/TrangChu.html">Trang Chủ</a></li>
-                <li><a href="/HocTap.html">Học Tập</a></li>
+                <li><a href="/HocTap.html" id="hoctap">Học Tập</a></li>
                 <li><a href="/BangDiem.html">Bảng Điểm</a></li>
                 <li class="active"><a href="/GioiThieu.html">Giới Thiệu</a></li>
             </ul>
         </nav>
-        <div>
-            <a href="/DangNhap-DangKy.html#dang-nhap">Đăng Nhập</a>
-            <a href="/DangNhap-DangKy.html#dang-ky">Đăng Ký</a>
+        <div id="usermenu">
+            <div class="ho-so hidden">
+                <span id="ten-ng-dung"></span>
+                <a id="dang-xuat" title="Đăng Xuất">
+                    <i class="fa-solid fa-right-from-bracket" style="font-size: 30px;"></i>
+                </a>
+            </div>
+        
+            <div id="nut-nhan">
+                <a href="/DangNhap-DangKy.html#dang-nhap">Đăng Nhập</a>
+                <a href="/DangNhap-DangKy.html#dang-ky">Đăng Ký</a>
+            </div>
         </div>
     </header>
     <main>
@@ -127,5 +157,67 @@
     <footer>
         <p>© 2025 Web Học Tập. All rights reserved.</p>
     </footer>
+
+    <script>
+        //Xử lý vùng đăng nhập/đăng ký - lời chào user/đăng xuất
+        document.getElementById('dang-xuat').addEventListener('click', DangXuat);
+        function showUserMenu(userName) 
+        {
+            document.querySelector(".ho-so").classList.remove("hidden");
+            document.getElementById("nut-nhan").classList.add("hidden");
+            document.getElementById('ten-ng-dung').textContent = `Xin chào, ${userName}`;
+        }
+
+        function showLoginMenu() 
+        {
+            document.querySelector(".ho-so").classList.add("hidden");
+            document.getElementById("nut-nhan").classList.remove("hidden");
+            document.getElementById("ten-ng-dung").textContent = "";
+        }
+
+        //lưu trạng thái đăng nhập
+        let dn = false;
+
+        function DangXuat() 
+        {
+            fetch('/dangxuat', {
+                method: 'POST',
+                credentials: 'include'
+            })
+            .then(() => {
+                window.location.href = "/DangNhap-DangKy.html#dang-nhap";
+            });
+        }
+
+        fetch('/hoso', {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(data => {
+            var userId = data.id;
+            var userName = data.HoTen
+            var trangThai = data.TrangThai
+
+            // Kiểm tra trạng thái ng dùng
+            if (trangThai) 
+            {
+                dn = true;
+                showUserMenu(userName);
+            }
+        })
+
+        //chặn truy cập vào trang học tập khi chưa đăng nhập
+        document.getElementById("hoctap").addEventListener('click', kiemtra);
+        function kiemtra(e)
+        {
+            if (!dn) 
+            {
+                e.preventDefault();
+                alert("Bạn cần đăng nhập để học");
+                window.location.href = "/DangNhap-DangKy.html#dang-nhap";
+            }
+        }
+    </script>
 </body>
 </html>
