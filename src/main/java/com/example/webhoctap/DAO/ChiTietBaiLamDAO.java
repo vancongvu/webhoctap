@@ -26,11 +26,6 @@ public class ChiTietBaiLamDAO implements DAOInterface<ChiTietBaiLam> {
         int ketQua = 0;
         try {
             Connection c = JDBCUtil.getConnection();
-            // Can luu lai
-            // CAUHOI_ID, DAP_AN_CHON
-            // NEU DAP_AN_CHON != QUIZ.DAP_AN_DUNG
-
-            // TODO: doi ten cot tu TONGQUANBL_ID thanh ID_TQBL (vcv)
 
             String sql = "INSERT INTO CHITIETBAILAM (DAP_AN_CHON, TQBL_ID, CAUHOI_ID) " +
                     "VALUES (?,?,?)";
