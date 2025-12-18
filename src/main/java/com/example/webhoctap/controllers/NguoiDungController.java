@@ -70,33 +70,37 @@ public class NguoiDungController {
         }
     }
 
+    //thông tin sau khi người dùng đăng nhập
     @ResponseBody
     @RequestMapping("/hoso")
-    public ResponseDangNhap getUserInfo(HttpServletRequest request) {
-
+    public ResponseDangNhap getUserInfo(HttpServletRequest request) 
+    {
         HttpSession session = request.getSession(false);
 
-        if (session == null) {
+        if (session == null) 
+        {
             return new ResponseDangNhap(0, null, false);
         }
 
         Integer userId = (Integer) session.getAttribute("id_user");
         String userName = (String) session.getAttribute("user_name");
 
-        if (userId == null) {
+        if (userId == null) 
+        {
             return new ResponseDangNhap(0, null, false);
         }
 
         return new ResponseDangNhap(userId, userName, true);
-    }
+    }    
 
-    @ResponseBody
+    //xử lý đăng xuất
     @RequestMapping("/dangxuat")
-    public String dangXuat(HttpServletRequest request) {
-
+    public String dangXuat(HttpServletRequest request) 
+    {
         HttpSession session = request.getSession(false);
 
-        if (session != null) {
+        if (session != null) 
+        {
             session.invalidate();
         }
 

@@ -52,8 +52,8 @@ public class MonHoc {
     {
         return this.HinhAnh;
     }
-    public void setHinhAnh(String hinhanh)
+    public void setHinhAnh(String HinhAnh)
     {
-        this.HinhAnh = hinhanh;
+        this.HinhAnh = HinhAnh;
     }
 }

@@ -23,8 +23,8 @@ public class MonHocDAO implements DAOInterface<MonHoc> {
         {
             Connection c = JDBCUtil.getConnection();
 
-            String sql = "INSERT INTO MONHOC (TENMONHOC, MOTA, HINHANH)" +
-                         "VALUES (?,?,?)";
+            String sql = "INSERT INTO MONHOC (TENMONHOC, MOTA, HINHANH) " +
+                         "VALUES (?,?)";
             
             PreparedStatement pst = c.prepareStatement(sql);
             pst.setString(1, t.getTenMonHoc());
@@ -51,7 +51,7 @@ public class MonHocDAO implements DAOInterface<MonHoc> {
             Connection c = JDBCUtil.getConnection();
 
             String sql = "UPDATE MONHOC " +
-                         "SET TENMONHOC = ? , MOTA = ? , HINHANH = ?" +
+                         "SET TENMONHOC = ? , MOTA = ? , HINHANH = ? " +
                          "WHERE ID_MONHOC = ?";
 
             PreparedStatement pst = c.prepareStatement(sql);
@@ -149,7 +149,7 @@ public class MonHocDAO implements DAOInterface<MonHoc> {
                 String mota = rs.getString("MOTA");
                 String hinhanh = rs.getString("HINHANH");
 
-                ketQua = new MonHoc(id, tenmonhoc, mota, hinhanh);
+                ketQua  = new MonHoc(id, tenmonhoc, mota, hinhanh);
             }
             JDBCUtil.closeConnection(c);
         }
