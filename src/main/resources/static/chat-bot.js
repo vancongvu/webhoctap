@@ -1,70 +1,63 @@
 (function() {
-    // thiet dat AI
-    
+    // Cau hinh mac dinh cho chatbot
     const defaultConfig = {
         title: 'Chat',
-        model: '',
+        apiKey: '', // de API key o day hoac trong window.CauHinhChat
         position: { bottom: 24, right: 24 },
         primaryColor: "#111827",
         soLuongKyTuToiDa: 1000
     }
 
-    // gop config mac dinh voi config nguoi dung
+    // Gop config mac dinh voi config nguoi dung
     const config = { ...defaultConfig, ...(window.CauHinhChat || {})};
+    config.position = { ...defaultConfig.position, ...(config.position || {}) };
 
     // Key de luu data vao localStorage
     const key = 'chatbot_hoithoai';
-    const apiKeyStorage = 'chatbot_api_key';
 
-    // trang thai
+    // Trang thai cua chatbot
     let state = {
         dangMo: false,
         tinnhan: [],
-        dangSuyNghi: false,
-        apiKey: ''
+        dangSuyNghi: false
     }
 
-    // load trang thai
+    // Load trang thai tu localStorage
     function loadTrangThai() {
-        // doc tu local storage
         try {
-            const chatbot = localStorage.getItem(key);
-            if (chatbot) {
-                // lay trang thai ra
-                const parsed = JSON.parse(chatbot);
-                state.dangMo = parsed.dangMo || false;
-                state.tinnhan = parsed.tinnhan || [];
+            const luuTru = localStorage.getItem(key);
+            if (luuTru) {
+                const duLieu = JSON.parse(luuTru);
+                state.dangMo = duLieu.dangMo || false;
+                state.tinnhan = duLieu.tinnhan || [];
             }
-
-            state.apiKey = localStorage.getItem(apiKeyStorage) || '';
         } catch (error) {
-            console.log('Loi khi tai trang thai', error);
+            console.log('Loi khi tai trang thai:', error);
         }
     }
 
-    // luu trang thai
+    // Luu trang thai vao localStorage
     function luuTrangThai() {
         try {
-            // luu trang thai tin nhan va trang thai dong/mo
             localStorage.setItem(key, JSON.stringify({
                 dangMo: state.dangMo,
                 tinnhan: state.tinnhan
-            }))
-            // luu api key
-            localStorage.setItem(apiKeyStorage, state.apiKey)
+            }));
         } catch (error) {
-            console.log('Loi khi luu trang thai', error);
+            console.log('Loi khi luu trang thai:', error);
         }
     }
 
+    // Mo hoac dong khung chat
     function DongMoChat() {
-        // dao nguoc trang thai hien tai
         state.dangMo = !state.dangMo;
         const khungChat = document.getElementById('chat-widget-panel');
 
         if (state.dangMo) {
-            // bo class an khung chat
             khungChat.classList.remove('chat-widget-hidden');
+            // Focus vao o input khi mo chat
+            const input = document.getElementById('chat-widget-input');
+            setTimeout(() => input.focus(), 100);
         } else {
             khungChat.classList.add('chat-widget-hidden');
         }
@@ -72,81 +65,88 @@
         luuTrangThai();
     }
 
+    // Dong khung chat
     function DongChat() {
         state.dangMo = false;
         const khungChat = document.getElementById('chat-widget-panel');
         khungChat.classList.add('chat-widget-hidden');
-
         luuTrangThai();
     }
 
+    // Gui tin nhan di
     function GuiTinNhan() {
         const input = document.getElementById('chat-widget-input');
-        // lay tin nhan ra
-        const tinnhan = input.value;
+        const tinNhan = input.value.trim();
 
-        console.log('tin nhan', tinnhan);
-
-        if (!tinnhan) {
+        // Khong gui neu rong hoac dang cho AI tra loi
+        if (!tinNhan || state.dangSuyNghi) {
             return;
         }
 
-        goiAI(tinnhan);
-        // xoa chat
+        // Xoa noi dung input
         input.value = '';
+        input.style.height = 'auto';
+
+        // Goi AI
+        goiAI(tinNhan);
     }
 
+    // Hien thi tat ca tin nhan
     function hienThiTinNhan() {
-        const messagesContainer = document.getElementById('chat-widget-messages');
+        const khungTinNhan = document.getElementById('chat-widget-messages');
 
+        // Hien thi loi chao neu chua co tin nhan
         if (state.tinnhan.length === 0 && !state.dangSuyNghi) {
-            messagesContainer.innerHTML = `
+            khungTinNhan.innerHTML = `
                 <div class="chat-widget-empty-state">
-                <div class="chat-widget-empty-state-icon">👋</div>
-                <div class="chat-widget-empty-state-text">
-                    Welcome! How can I help you today?<br>
-                    ${!state.apiKey ? '<br><em>Please set your API key in Settings to start chatting.</em>' : ''}
-                </div>
+                    <div class="chat-widget-empty-state-icon">👋</div>
+                    <div class="chat-widget-empty-state-text">
+                        Xin chào! Tôi có thể giúp gì cho bạn?
+                    </div>
                 </div>
             `;
             return;
         }
 
-        messagesContainer.innerHTML = '';
+        // Xoa het tin nhan cu
+        khungTinNhan.innerHTML = '';
 
+        // Hien thi tung tin nhan
         state.tinnhan.forEach(msg => {
-        const messageDiv = document.createElement('div');
-            messageDiv.className = `chat-widget-message ${msg.role}`;
+            const tinNhanDiv = document.createElement('div');
+            tinNhanDiv.className = `chat-widget-message ${msg.role}`;
 
-            const bubble = document.createElement('div');
-            bubble.className = 'chat-widget-message-bubble';
-            bubble.textContent = msg.content;
+            const noiDung = document.createElement('div');
+            noiDung.className = 'chat-widget-message-bubble';
+            noiDung.textContent = msg.content;
 
-            messageDiv.appendChild(bubble);
-            messagesContainer.appendChild(messageDiv);
+            tinNhanDiv.appendChild(noiDung);
+            khungTinNhan.appendChild(tinNhanDiv);
         });
 
+        // Hien thi dau ... khi AI dang suy nghi
         if (state.dangSuyNghi) {
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'chat-widget-message assistant';
-            typingDiv.innerHTML = `
+            const dangGo = document.createElement('div');
+            dangGo.className = 'chat-widget-message assistant';
+            dangGo.innerHTML = `
                 <div class="chat-widget-typing">
-                <span></span>
-                <span></span>
-                <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
             `;
-            messagesContainer.appendChild(typingDiv);
+            khungTinNhan.appendChild(dangGo);
         }
 
-        // Auto-scroll to bottom
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        // Tu dong cuon xuong tin nhan moi nhat
+        khungTinNhan.scrollTop = khungTinNhan.scrollHeight;
     }
 
+    // Them tin nhan moi vao danh sach
     function themTinNhan(role, content) {
         state.tinnhan.push({
-            role,
-            content,
+            role: role,
+            content: content,
             timestamp: Date.now()
         });
 
@@ -154,110 +154,168 @@
         hienThiTinNhan();
     }
 
-    async function goiAI(tinnhan) {
-        const apiKey = '';
-        // them tin nhan nguoi dung cho ai
-        themTinNhan('user', tinnhan);
-        // show trang thai dang suy nghi
-        state.dangSuyNghi = true;
+    // Hien thi loi cho nguoi dung
+    function hienThiLoi(thongBao) {
+        state.tinnhan.push({
+            role: 'error',
+            content: '⚠️ ' + thongBao,
+            timestamp: Date.now()
+        });
 
+        luuTrangThai();
+        hienThiTinNhan();
+    }
+
+    // Goi AI de tra loi
+    async function goiAI(tinNhan) {
+        // Kiem tra API key
+        if (!config.apiKey) {
+            themTinNhan('user', tinNhan);
+            state.dangSuyNghi = false;
+            hienThiLoi('Chưa có API key! Vui lòng thêm API key vào config.');
+            return;
+        }
+
+        // Them tin nhan nguoi dung
+        themTinNhan('user', tinNhan);
+
+        // Bat dau trang thai dang suy nghi
+        state.dangSuyNghi = true;
         hienThiTinNhan();
 
-        // goi ai
         try {
-            const noidung = state.tinnhan
-            .filter(tin => tin.role === 'user' || tin.role === 'assistant')
-            .map(tin => ({
-                role: tin.role === 'user' ? 'user' : 'model',
-                parts: [{
-                    text: tin.content
-                }]
-            }))
+            // Chuan bi lich su hoi thoai
+            const lichSu = state.tinnhan
+                .filter(tin => tin.role === 'user' || tin.role === 'assistant')
+                .slice(-20) // Chi lay 20 tin nhan gan nhat
+                .map(tin => ({
+                    role: tin.role === 'user' ? 'user' : 'model',
+                    parts: [{ text: tin.content }]
+                }));
 
-            console.log('noidung', noidung);
-
-            // goi API
+            // Goi Gemini API
             const response = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${config.apiKey}`,
                 {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        contents: noidung
+                        contents: lichSu
                     })
                 }
             );
 
+            // Kiem tra loi tu API
             if (!response.ok) {
-                console.log('loi xay ra');
+                const loiData = await response.json().catch(() => ({}));
+                throw new Error(loiData.error?.message || 'Lỗi kết nối API');
             }
 
             const data = await response.json();
-            const tinNhanPhanHoi = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            const traLoi = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
-            if (!tinNhanPhanHoi) {
-                throw new Error('Loi API');
+            if (!traLoi) {
+                throw new Error('Không nhận được phản hồi từ AI');
             }
 
-            // Them tin nhan phan hoi
+            // Them tin nhan tra loi tu AI
             state.dangSuyNghi = false;
-            themTinNhan('assistant', tinNhanPhanHoi);
+            themTinNhan('assistant', traLoi);
+
         } catch (error) {
-            
+            console.log('Loi khi goi AI:', error);
+            state.dangSuyNghi = false;
+            hienThiLoi(error.message || 'Có lỗi xảy ra. Vui lòng thử lại!');
         }
     }
 
+    // Khoi tao chatbot
     function khoiTao() {
         loadTrangThai();
         chenCss();
         chenHtml();
+        hienThiTinNhan();
 
-        // gan su kien
+        // Hien thi lai trang thai mo/dong
+        if (state.dangMo) {
+            document.getElementById('chat-widget-panel').classList.remove('chat-widget-hidden');
+        }
+
+        // Gan cac su kien
         document.getElementById('chat-widget-toggle').addEventListener('click', DongMoChat);
         document.getElementById('chat-widget-close').addEventListener('click', DongChat);
         document.getElementById('chat-widget-send').addEventListener('click', GuiTinNhan);
+
+        // Xu ly phim Enter de gui tin nhan
+        const input = document.getElementById('chat-widget-input');
+
+        input.addEventListener('keydown', function(e) {
+            // Nhan Enter (khong Shift) de gui
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                GuiTinNhan();
+            }
+        });
+
+        // Tu dong tang kich thuoc textarea khi go
+        input.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Cap nhat trang thai nut Send
+        const capNhatNutSend = function() {
+            const nutSend = document.getElementById('chat-widget-send');
+            const coNoiDung = input.value.trim().length > 0;
+            nutSend.disabled = state.dangSuyNghi || !coNoiDung;
+        };
+
+        input.addEventListener('input', capNhatNutSend);
+        setInterval(capNhatNutSend, 100);
     }
 
+    // Chen HTML vao trang
     function chenHtml() {
-        const container = document.createElement('div');
-        container.className = 'chat-widget-container';
-        container.innerHTML = `
-        <button class="chat-widget-button" id="chat-widget-toggle" aria-label="Toggle chat">
-            💬
-        </button>
-        <div class="chat-widget-panel chat-widget-hidden" id="chat-widget-panel">
-            <div class="chat-widget-header">
-            <div class="chat-widget-header-title">
-                <span class="chat-widget-status"></span>
-                <span>${config.title}</span>
+        const khungChinh = document.createElement('div');
+        khungChinh.className = 'chat-widget-container';
+        khungChinh.innerHTML = `
+            <button class="chat-widget-button" id="chat-widget-toggle" aria-label="Mo chat">
+                💬
+            </button>
+            <div class="chat-widget-panel chat-widget-hidden" id="chat-widget-panel">
+                <div class="chat-widget-header">
+                    <div class="chat-widget-header-title">
+                        <span class="chat-widget-status"></span>
+                        <span>${config.title}</span>
+                    </div>
+                    <div class="chat-widget-header-actions">
+                        <button class="chat-widget-icon-btn" id="chat-widget-close" title="Dong">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+                <div class="chat-widget-messages" id="chat-widget-messages"></div>
+                <div class="chat-widget-input-area">
+                    <textarea
+                        class="chat-widget-textarea"
+                        id="chat-widget-input"
+                        placeholder="Nhập tin nhắn..."
+                        rows="1"
+                        maxlength="${config.soLuongKyTuToiDa}"
+                    ></textarea>
+                    <button class="chat-widget-send-btn" id="chat-widget-send">Gửi</button>
+                </div>
             </div>
-            <div class="chat-widget-header-actions">
-                <button class="chat-widget-icon-btn" id="chat-widget-close" title="Close">
-                ✕
-                </button>
-            </div>
-            </div>
-            <div class="chat-widget-messages" id="chat-widget-messages"></div>
-            <div class="chat-widget-input-area">
-            <textarea
-                class="chat-widget-textarea"
-                id="chat-widget-input"
-                placeholder="Type a message..."
-                rows="1"
-                maxlength="${config.soLuongKyTuToiDa}"
-            ></textarea>
-            <button class="chat-widget-send-btn" id="chat-widget-send">Send</button>
-            </div>
-        </div>
         `;
-        document.body.appendChild(container);
+        document.body.appendChild(khungChinh);
     }
 
+    // Chen CSS vao trang
     function chenCss() {
         const style = document.createElement('style');
-    style.textContent = `
+        style.textContent = `
       .chat-widget-container {
         position: fixed;
         bottom: ${config.position.bottom}px;
@@ -641,14 +699,15 @@
           max-height: 80vh;
         }
       }
-    `;
-    document.head.appendChild(style);
+        `;
+        document.head.appendChild(style);
     }
 
+    // Bat dau khoi tao khi trang da san sang
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', khoiTao);
     } else {
         khoiTao();
     }
-    
+
 })();
