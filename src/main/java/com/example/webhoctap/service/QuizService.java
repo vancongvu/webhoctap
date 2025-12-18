@@ -10,7 +10,7 @@ public class QuizService {
         return new QuizService();
     }
 
-    //lấy danh sách quiz theo id (vcv)
+    //lấy danh sách quiz theo id 
     public ArrayList<Quiz> QuizByMonHocId(int id)
     {
         return QuizDAO.getInstance().selectByMonHocId(id);
@@ -26,16 +26,5 @@ public class QuizService {
             ketQua = true;
         }
         return ketQua;
-    }
-
-    // tính điểm nếu người dùng chọn đáp án đúng
-    public int tinhDiem(int[] idCauHoi, int[] dapanNguoiDung) {
-        int diem = 0;
-        for (int i = 0; i < idCauHoi.length; i++) {
-            if (kiemtraDapAn(idCauHoi[i], dapanNguoiDung[i])) {
-                diem++;
-            }
-        }
-        return diem;
     }
 }
