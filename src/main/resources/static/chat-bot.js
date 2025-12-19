@@ -1,28 +1,28 @@
 (function() {
-    // Cau hinh mac dinh cho chatbot
+    // Cấu hình mặc định cho chatbot
     const defaultConfig = {
         title: 'Chat',
-        apiKey: '', // de API key o day hoac trong window.CauHinhChat
+        apiKey: '', // để API Key ở đây hoặc trong window.CauHinhChat
         position: { bottom: 24, right: 24 },
         primaryColor: "#111827",
         soLuongKyTuToiDa: 1000
     }
 
-    // Gop config mac dinh voi config nguoi dung
+    // Gộp config mặc định với config người dùng
     const config = { ...defaultConfig, ...(window.CauHinhChat || {})};
     config.position = { ...defaultConfig.position, ...(config.position || {}) };
 
-    // Key de luu data vao localStorage
+    // Key để lưu data vào localStorage
     const key = 'chatbot_hoithoai';
 
-    // Trang thai cua chatbot
+    // Trạng thái của chatbot
     let state = {
         dangMo: false,
         tinnhan: [],
         dangSuyNghi: false
     }
 
-    // Load trang thai tu localStorage
+    // Load trạng thái từ localStorage
     function loadTrangThai() {
         try {
             const luuTru = localStorage.getItem(key);
@@ -36,7 +36,7 @@
         }
     }
 
-    // Luu trang thai vao localStorage
+    // Lưu trạng thái vào localStorage
     function luuTrangThai() {
         try {
             localStorage.setItem(key, JSON.stringify({
@@ -48,7 +48,7 @@
         }
     }
 
-    // Mo hoac dong khung chat
+    // Đóng/mở khung chat
     function DongMoChat() {
         state.dangMo = !state.dangMo;
         const khungChat = document.getElementById('chat-widget-panel');
@@ -65,7 +65,7 @@
         luuTrangThai();
     }
 
-    // Dong khung chat
+    // Đóng khung chat
     function DongChat() {
         state.dangMo = false;
         const khungChat = document.getElementById('chat-widget-panel');
@@ -73,29 +73,29 @@
         luuTrangThai();
     }
 
-    // Gui tin nhan di
+    // Gửi tin nhắn đi
     function GuiTinNhan() {
         const input = document.getElementById('chat-widget-input');
         const tinNhan = input.value.trim();
 
-        // Khong gui neu rong hoac dang cho AI tra loi
+        // Không gửi nếu rỗng hoặc đang chờ AI trả lời
         if (!tinNhan || state.dangSuyNghi) {
             return;
         }
 
-        // Xoa noi dung input
+        // Xoa nội dung tin nhắn khi gửi
         input.value = '';
         input.style.height = 'auto';
 
-        // Goi AI
+        // Gửi cho AI
         goiAI(tinNhan);
     }
 
-    // Hien thi tat ca tin nhan
+    // Hiển thị tất cả tin nhắn
     function hienThiTinNhan() {
         const khungTinNhan = document.getElementById('chat-widget-messages');
 
-        // Hien thi loi chao neu chua co tin nhan
+        // Hiển thị lời chào nếu chưa có tin nhắn
         if (state.tinnhan.length === 0 && !state.dangSuyNghi) {
             khungTinNhan.innerHTML = `
                 <div class="chat-widget-empty-state">
@@ -108,10 +108,10 @@
             return;
         }
 
-        // Xoa het tin nhan cu
+        // Xóa hết tin nhắn cũ
         khungTinNhan.innerHTML = '';
 
-        // Hien thi tung tin nhan
+        // Hiển thị từng tin nhắn
         state.tinnhan.forEach(msg => {
             const tinNhanDiv = document.createElement('div');
             tinNhanDiv.className = `chat-widget-message ${msg.role}`;
@@ -124,7 +124,7 @@
             khungTinNhan.appendChild(tinNhanDiv);
         });
 
-        // Hien thi dau ... khi AI dang suy nghi
+        // Hiển thị trạng thái khi AI suy nghĩ, chờ câu trả lời
         if (state.dangSuyNghi) {
             const dangGo = document.createElement('div');
             dangGo.className = 'chat-widget-message assistant';
@@ -138,11 +138,11 @@
             khungTinNhan.appendChild(dangGo);
         }
 
-        // Tu dong cuon xuong tin nhan moi nhat
+        // Tự động cuộn khi có tin nhắn mới
         khungTinNhan.scrollTop = khungTinNhan.scrollHeight;
     }
 
-    // Them tin nhan moi vao danh sach
+    // Thêm tin nhắn mới vào danh sách
     function themTinNhan(role, content) {
         state.tinnhan.push({
             role: role,
@@ -154,7 +154,7 @@
         hienThiTinNhan();
     }
 
-    // Hien thi loi cho nguoi dung
+    // Thông báo lỗi cho người dùng
     function hienThiLoi(thongBao) {
         state.tinnhan.push({
             role: 'error',
@@ -166,7 +166,7 @@
         hienThiTinNhan();
     }
 
-    // Goi AI de tra loi
+    // Gọi AI để trả lời người dùng
     async function goiAI(tinNhan) {
         // Kiem tra API key
         if (!config.apiKey) {
@@ -176,24 +176,24 @@
             return;
         }
 
-        // Them tin nhan nguoi dung
+        // Thêm tin nhắn người dùng
         themTinNhan('user', tinNhan);
 
-        // Bat dau trang thai dang suy nghi
+        // Trạng thái đang suy nghĩ khi chưa có câu trả lời
         state.dangSuyNghi = true;
         hienThiTinNhan();
 
         try {
-            // Chuan bi lich su hoi thoai
+            // Chuẩn bị lịch sử hội thoại
             const lichSu = state.tinnhan
                 .filter(tin => tin.role === 'user' || tin.role === 'assistant')
-                .slice(-20) // Chi lay 20 tin nhan gan nhat
+                .slice(-20) // Chỉ lấy 20 tin nhắn gần nhất
                 .map(tin => ({
                     role: tin.role === 'user' ? 'user' : 'model',
                     parts: [{ text: tin.content }]
                 }));
 
-            // Goi Gemini API
+            // Gọi Gemini AI
             const response = await fetch(
                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${config.apiKey}`,
                 {
@@ -207,7 +207,7 @@
                 }
             );
 
-            // Kiem tra loi tu API
+            // Kiểm tra lỗi từ API
             if (!response.ok) {
                 const loiData = await response.json().catch(() => ({}));
                 throw new Error(loiData.error?.message || 'Lỗi kết nối API');
@@ -220,7 +220,7 @@
                 throw new Error('Không nhận được phản hồi từ AI');
             }
 
-            // Them tin nhan tra loi tu AI
+            // Thêm tin nhắn trả lời từ AI
             state.dangSuyNghi = false;
             themTinNhan('assistant', traLoi);
 
@@ -231,41 +231,41 @@
         }
     }
 
-    // Khoi tao chatbot
+    // Khởi tạo chatbot
     function khoiTao() {
         loadTrangThai();
         chenCss();
         chenHtml();
         hienThiTinNhan();
 
-        // Hien thi lai trang thai mo/dong
+        // Hiển thị lại trạng thái đóng/mở
         if (state.dangMo) {
             document.getElementById('chat-widget-panel').classList.remove('chat-widget-hidden');
         }
 
-        // Gan cac su kien
+        // Gắn các sự kiện
         document.getElementById('chat-widget-toggle').addEventListener('click', DongMoChat);
         document.getElementById('chat-widget-close').addEventListener('click', DongChat);
         document.getElementById('chat-widget-send').addEventListener('click', GuiTinNhan);
 
-        // Xu ly phim Enter de gui tin nhan
+        // Xử lý nhấn Enter để gửi tin nhắn
         const input = document.getElementById('chat-widget-input');
 
         input.addEventListener('keydown', function(e) {
-            // Nhan Enter (khong Shift) de gui
+            // Nhấn Enter (không Shift) để gửi
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 GuiTinNhan();
             }
         });
 
-        // Tu dong tang kich thuoc textarea khi go
+        // Tự động tăng kích thước textarea khi gõ
         input.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
 
-        // Cap nhat trang thai nut Send
+        // Cập nhật trạng thái nút Send
         const capNhatNutSend = function() {
             const nutSend = document.getElementById('chat-widget-send');
             const coNoiDung = input.value.trim().length > 0;
@@ -276,7 +276,7 @@
         setInterval(capNhatNutSend, 100);
     }
 
-    // Chen HTML vao trang
+    // Chèn HTML vào trang
     function chenHtml() {
         const khungChinh = document.createElement('div');
         khungChinh.className = 'chat-widget-container';
@@ -312,7 +312,7 @@
         document.body.appendChild(khungChinh);
     }
 
-    // Chen CSS vao trang
+    // Chèn CSS vào trang
     function chenCss() {
         const style = document.createElement('style');
         style.textContent = `
@@ -350,6 +350,7 @@
       }
 
       .chat-widget-panel {
+        height: 500px;
         position: absolute;
         bottom: 70px;
         right: 0;
@@ -703,11 +704,25 @@
         document.head.appendChild(style);
     }
 
-    // Bat dau khoi tao khi trang da san sang
+    // Bắt đầu khởi tạo khi trang đã sẵn sàng
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', khoiTao);
     } else {
         khoiTao();
     }
+
+    //Không hiển thị chatbot khi làm quiz
+    function capNhatTrangChatbot() {
+      const nutChat = document.getElementById('chat-widget-toggle');
+      if (!nutChat) return;
+
+      if (location.hash === '#quiz') {
+        nutChat.style.display = 'none'; // ẩn chatbot
+      } else {
+        nutChat.style.display = 'flex'; // hiện chatbot
+      }
+    }
+  window.addEventListener('hashchange', capNhatTrangChatbot);
+  document.addEventListener('DOMContentLoaded', capNhatTrangChatbot);
 
 })();

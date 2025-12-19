@@ -108,7 +108,7 @@
             <ul>
                 <li><a href="/TrangChu.html">Trang Chủ</a></li>
                 <li><a href="/HocTap.html" id="hoctap">Học Tập</a></li>
-                <li><a href="/BangDiem.html">Bảng Điểm</a></li>
+                <li><a href="/BangDiem.html" id="bangdiem">Bảng Điểm</a></li>
                 <li class="active"><a href="/GioiThieu.html">Giới Thiệu</a></li>
             </ul>
         </nav>
@@ -209,6 +209,7 @@
 
         //chặn truy cập vào trang học tập khi chưa đăng nhập
         document.getElementById("hoctap").addEventListener('click', kiemtra);
+        document.getElementById("bangdiem").addEventListener('click',kiemtra);
         function kiemtra(e)
         {
             if (!dn) 

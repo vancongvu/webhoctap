@@ -457,7 +457,7 @@
                 </div>
             </section>
             <!-- TRANG FLASHCARD -->
-            <section class="trang-flashcard">
+            <section class="trang-flashcard" id="flashcard">
                 <h1 class="ten-chu-de">Lịch Sử Việt Nam</h1>
                 <p class="so-cau-hoi">Thẻ n/n</p>
                 <article class="flashcard">   
@@ -475,7 +475,7 @@
             </section>
 
             <!-- TRANG QUIZ -->
-            <section class="trang-quiz">
+            <section class="trang-quiz" id="quiz">
                 <article class="gioi-thieu-quiz">
                     <h2>tiêu đề</h2>
                     <p>số câu hỏi</p>
@@ -856,6 +856,12 @@
         buttonHT.addEventListener('click', thongkequiz);
         function thongkequiz()
         {
+            if (danhSachDapAn[sothutuQ] === 0) 
+            {
+                alert("Vui lòng chọn đáp án trước khi hoàn thành");
+                return;
+            }
+
             trangND.style.display = "none";
             trangTK.style.display = "flex";
             diemTongKet.textContent = updateDiem + "/" + quizQuiz.length;
@@ -922,5 +928,14 @@
         }
 
     </script>
+
+    <script>
+        window.CauHinhChat = {
+            title: 'Trợ Lý Học Tập',
+            apiKey: 'AIzaSyAfaFB7AI32Dnv27qo9kwiQhnxrT9yz9TA', // Them API key cua ban vao day
+            primaryColor: '#4F46E5'
+        };
+    </script>
+    <script src="/chat-bot.js" defer></script>
 </body>
 </html>
